@@ -10,6 +10,15 @@ namespace IA___Fuzzy
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Coemçou");
+
+            MontaMenu();
+
+        }
+
+        public static void MontaMenu()
+        {
+
         }
     }
 }
