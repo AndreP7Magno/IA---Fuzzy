@@ -80,7 +80,7 @@ namespace IA___Fuzzy
         {
             int novaOpcao = int.Parse(opcao);
 
-            //Retorno 2 melhores
+            //Retorno 2 melhores (15 regras)
             List<Usuario> usuariosComMelhoresRelacionamento = CalcularDesempenhoRelacionamento(usuarios, novaOpcao);
             /*List<Usuario> usuariosComMelhoresTempoLivres = CalcularDesempenhoTempoLivre(usuarios, novaOpcao);
             List<Usuario> usuariosComMelhoresNotas = CalcularDesempenhoNotas(usuarios, novaOpcao);
@@ -275,6 +275,7 @@ namespace IA___Fuzzy
         AtividadesComum = 5,
         DominioConteudo = 6,
         Faltas = 7,
+        //mais 3 variaveis
     }
 
     #endregion
