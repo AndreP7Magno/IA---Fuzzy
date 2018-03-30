@@ -7,5 +7,7 @@
         public int Idade { get; set; }
         public string Sexo { get; set; }
         public int CodMelhorRelacionado { get; set; }
+        public bool PossuiTempoLivre { get; set; }
+        public int QuantidadeHorasTempoLivre { get; set; }
     }
 }

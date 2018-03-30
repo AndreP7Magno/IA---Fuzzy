@@ -7,32 +7,32 @@ namespace IA___Fuzzy
 {
     public class Program
     {
-        static List<Usuario> usuariosGlobal = new List<Usuario>();
+        static List<Usuario> usuarios = new List<Usuario>();
 
         public static void Main(string[] args)
         {
             Console.WriteLine("Aguarde enquanto estamos recolhendo as informações do usuário...");
 
             string file = Properties.Resources.Usuario;
-            Random rand = new Random();
             var lines = file.Split(new[] { Environment.NewLine },
                                             StringSplitOptions.RemoveEmptyEntries).ToList();
 
-            List<Usuario> usuarios = new List<Usuario>();
             foreach (var item in lines)
             {
                 var divisor = item.Split('|');
-                var usuario = new Usuario()
-                {
-                    Codigo = int.Parse(divisor[0].Trim()),
-                    Nome = divisor[1].Trim(),
-                    Idade = int.Parse(divisor[2].Trim()),
-                    Sexo = divisor[3].Trim(),
-                    CodMelhorRelacionado = int.Parse(divisor[4].Trim()),
-                };
+                var possuiTempoLivre = divisor[5].Trim();
+
+                var usuario = new Usuario();
+                usuario.Codigo = int.Parse(divisor[0].Trim());
+                usuario.Nome = divisor[1].Trim();
+                usuario.Idade = int.Parse(divisor[2].Trim());
+                usuario.Sexo = divisor[3].Trim();
+                usuario.CodMelhorRelacionado = int.Parse(divisor[4].Trim());
+                usuario.PossuiTempoLivre = bool.Parse(possuiTempoLivre);
+                usuario.QuantidadeHorasTempoLivre = divisor[6].Trim().Equals("null") ? 0 : int.Parse(divisor[6].Trim());
+
                 usuarios.Add(usuario);
             }
-            usuariosGlobal = usuarios;
 
             System.Threading.Thread.Sleep(3000);
 
@@ -51,24 +51,24 @@ namespace IA___Fuzzy
                     break;
                 case "1":
                     InformaUsuario();
-                    MontaFuzzy(usuariosGlobal, opcao);
+                    MontaFuzzy(usuarios, opcao);
                     Console.ReadKey();
                     break;
                 case "2":
                     InformaUsuario();
-                    MontaFuzzy(usuariosGlobal, opcao);
+                    MontaFuzzy(usuarios, opcao);
                     break;
                 case "3":
                     InformaUsuario();
-                    MontaFuzzy(usuariosGlobal, opcao);
+                    MontaFuzzy(usuarios, opcao);
                     break;
                 case "4":
                     InformaUsuario();
-                    MontaFuzzy(usuariosGlobal, opcao);
+                    MontaFuzzy(usuarios, opcao);
                     break;
                 case "5":
                     InformaUsuario();
-                    MontaFuzzy(usuariosGlobal, opcao);
+                    MontaFuzzy(usuarios, opcao);
                     break;
                 default:
                     MontaMenuErro();
@@ -82,24 +82,24 @@ namespace IA___Fuzzy
 
             //Retorno 2 melhores (15 regras)
             List<Usuario> usuariosComMelhoresRelacionamento = CalcularDesempenhoRelacionamento(usuarios, novaOpcao);
-            /*List<Usuario> usuariosComMelhoresTempoLivres = CalcularDesempenhoTempoLivre(usuarios, novaOpcao);
-            List<Usuario> usuariosComMelhoresNotas = CalcularDesempenhoNotas(usuarios, novaOpcao);
+            List<Usuario> usuariosComMelhoresTempoLivres = CalcularDesempenhoTempoLivre(usuarios, novaOpcao);
+            /*List<Usuario> usuariosComMelhoresNotas = CalcularDesempenhoNotas(usuarios, novaOpcao);
             List<Usuario> usuariosComMelhoresGostosComum = CalcularDesempenhoGostoComum(usuarios, novaOpcao);
             List<Usuario> usuariosComMelhoresDominioConteudo = CalcularDesempenhoDominioConteudo(usuarios, novaOpcao);
             List<Usuario> usuariosComMelhoresFaltas = CalcularDesempenhoFaltas(usuarios, novaOpcao);
             List<Usuario> usuariosComMelhoresConfianca = CalcularDesempenhoConfianca(usuarios, novaOpcao);*/
 
-            //List<Usuario> duplaFinal = MontaDoisMelhores();
+            List<Usuario> duplaFinal = MontaMelhorDupla(usuariosComMelhoresRelacionamento, usuariosComMelhoresTempoLivres);
 
-            var nome1 = usuariosComMelhoresRelacionamento.First().Nome;
-            var nome2 = usuariosComMelhoresRelacionamento.Last().Nome;
+            var nome1 = duplaFinal.First().Nome;
+            var nome2 = duplaFinal.Last().Nome;
 
             Console.Clear();
-            Console.WriteLine("╔═══════════════════════════════╗");
-            Console.WriteLine("║ \tMelhor dupla formada:   ║");
-            Console.WriteLine("║ 1. " + nome1 + "                    ║");
-            Console.WriteLine("║ 2. " + nome2 + "                   ║");
-            Console.WriteLine("╚═══════════════════════════════╝");
+            Console.WriteLine("");
+            Console.WriteLine("\tMelhor dupla formada:");
+            Console.WriteLine("1. " + nome1);
+            Console.WriteLine("2. " + nome2 );
+            Console.WriteLine("");
             Console.WriteLine("Clique para continuar.");
             Console.ReadKey();
             MontaMenuFinal();
@@ -133,6 +133,33 @@ namespace IA___Fuzzy
             return retorno;
         }
 
+        private static List<Usuario> CalcularDesempenhoTempoLivre(List<Usuario> usuarios, int opcao)
+        {
+            var usuariosComTempoLivre = usuarios.Where(w => w.PossuiTempoLivre).ToList();
+            List<Usuario> user = new List<Usuario>();
+
+            foreach (var item in usuariosComTempoLivre)
+            {
+                var usuario = new Usuario();
+                usuario = item;
+
+                if (user.Count < 2)
+                    user.Add(usuario);
+                else if (user.Count == 2)
+                {
+                    var usuarioComMenorTempoLivre = user.Where(w => w.QuantidadeHorasTempoLivre < usuario.QuantidadeHorasTempoLivre).FirstOrDefault();
+
+                    if (usuarioComMenorTempoLivre != null)
+                    {
+                        user.Remove(usuarioComMenorTempoLivre);
+                        user.Add(usuario);
+                    }
+                }
+            }
+
+            return user;
+        }
+
         private static List<Usuario> CalcularDesempenhoConfianca(List<Usuario> usuarios, int novaOpcao)
         {
             throw new NotImplementedException();
@@ -158,9 +185,10 @@ namespace IA___Fuzzy
             throw new NotImplementedException();
         }
 
-        private static List<Usuario> CalcularDesempenhoTempoLivre(List<Usuario> usuarios, int opcao)
+        private static List<Usuario> MontaMelhorDupla(List<Usuario> usuariosComMelhoresRelacionamento, List<Usuario> usuariosComMelhoresTempoLivres)
         {
-            throw new NotImplementedException();
+            //TODO
+            return usuariosComMelhoresRelacionamento;
         }
 
         #endregion
@@ -274,8 +302,9 @@ namespace IA___Fuzzy
         Confiança = 4,
         AtividadesComum = 5,
         DominioConteudo = 6,
-        Faltas = 7,
-        //mais 3 variaveis
+        Dedicacao = 7,
+        Faltas = 8,
+        //mais 2 variaveis
     }
 
     #endregion
