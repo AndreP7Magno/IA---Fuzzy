@@ -20,7 +20,6 @@ namespace IA___Fuzzy
             foreach (var item in lines)
             {
                 var divisor = item.Split('|');
-                var possuiTempoLivre = divisor[5].Trim();
 
                 var usuario = new Usuario();
                 usuario.Codigo = int.Parse(divisor[0].Trim());
@@ -28,8 +27,20 @@ namespace IA___Fuzzy
                 usuario.Idade = int.Parse(divisor[2].Trim());
                 usuario.Sexo = divisor[3].Trim();
                 usuario.CodMelhorRelacionado = int.Parse(divisor[4].Trim());
-                usuario.PossuiTempoLivre = bool.Parse(possuiTempoLivre);
-                usuario.QuantidadeHorasTempoLivre = divisor[6].Trim().Equals("null") ? 0 : int.Parse(divisor[6].Trim());
+                usuario.PossuiTempoLivre = bool.Parse(divisor[5].Trim());
+                usuario.QuantidadeHorasTempoLivre = int.Parse(divisor[6].Trim());
+                usuario.NotaProgramacao = double.Parse(divisor[7].Trim());
+                usuario.NotaEstruturaDados = double.Parse(divisor[8].Trim());
+                usuario.NotaBancoDados = double.Parse(divisor[9].Trim());
+                usuario.NotaCalculo = double.Parse(divisor[10].Trim());
+                usuario.NotaGerenciaProjetos = double.Parse(divisor[11].Trim());
+                usuario.CodMaiorConfianca = int.Parse(divisor[12].Trim());
+                usuario.CodMaiorAtividadesComum = int.Parse(divisor[13].Trim());
+                usuario.PossuiDominioProgramacao = bool.Parse(divisor[14].Trim());
+                usuario.PossuiDominioEstruturaDados = bool.Parse(divisor[15].Trim());
+                usuario.PossuiDominioBancoDados = bool.Parse(divisor[16].Trim());
+                usuario.PossuiDominioCalculo = bool.Parse(divisor[17].Trim());
+                usuario.PossuiDominioGerenciaProjetos = bool.Parse(divisor[18].Trim());
 
                 usuarios.Add(usuario);
             }
@@ -52,7 +63,6 @@ namespace IA___Fuzzy
                 case "1":
                     InformaUsuario();
                     MontaFuzzy(usuarios, opcao);
-                    Console.ReadKey();
                     break;
                 case "2":
                     InformaUsuario();
@@ -78,18 +88,18 @@ namespace IA___Fuzzy
         
         public static void MontaFuzzy(List<Usuario> usuarios, string opcao)
         {
-            int novaOpcao = int.Parse(opcao);
+            //Retorno 2 melhores de cada variável
+            List<Usuario> usuariosComMelhoresRelacionamento = CalcularDesempenhoRelacionamento(usuarios, int.Parse(opcao));
+            List<Usuario> usuariosComMelhoresTempoLivres = CalcularDesempenhoTempoLivre(usuarios, int.Parse(opcao));
+            List<Usuario> usuariosComMelhoresNotas = CalcularDesempenhoNotas(usuarios, int.Parse(opcao));
+            List<Usuario> usuariosComMelhoresConfianca = CalcularDesempenhoConfianca(usuarios, int.Parse(opcao));
+            List<Usuario> usuariosComMelhoresAtividadesComum = CalcularDesempenhoAtividadesComum(usuarios, int.Parse(opcao));
+            List<Usuario> usuariosComMelhoresDominioConteudo = CalcularDesempenhoDominioConteudo(usuarios, int.Parse(opcao));
+            List<Usuario> usariosComMelhoresDedicacoes = CalcularDesempenhoDedicacao(usuarios, int.Parse(opcao));
+            /*List<Usuario> usuariosComMelhoresFaltas = CalcularDesempenhoFaltas(usuarios, novaOpcao);*/
 
-            //Retorno 2 melhores (15 regras)
-            List<Usuario> usuariosComMelhoresRelacionamento = CalcularDesempenhoRelacionamento(usuarios, novaOpcao);
-            List<Usuario> usuariosComMelhoresTempoLivres = CalcularDesempenhoTempoLivre(usuarios, novaOpcao);
-            /*List<Usuario> usuariosComMelhoresNotas = CalcularDesempenhoNotas(usuarios, novaOpcao);
-            List<Usuario> usuariosComMelhoresGostosComum = CalcularDesempenhoGostoComum(usuarios, novaOpcao);
-            List<Usuario> usuariosComMelhoresDominioConteudo = CalcularDesempenhoDominioConteudo(usuarios, novaOpcao);
-            List<Usuario> usuariosComMelhoresFaltas = CalcularDesempenhoFaltas(usuarios, novaOpcao);
-            List<Usuario> usuariosComMelhoresConfianca = CalcularDesempenhoConfianca(usuarios, novaOpcao);*/
-
-            List<Usuario> duplaFinal = MontaMelhorDupla(usuariosComMelhoresRelacionamento, usuariosComMelhoresTempoLivres);
+            List<Usuario> duplaFinal = MontaMelhorDupla(usuariosComMelhoresRelacionamento, usuariosComMelhoresTempoLivres, usuariosComMelhoresNotas, usuariosComMelhoresConfianca,
+                                                            usuariosComMelhoresAtividadesComum, usuariosComMelhoresDominioConteudo, usariosComMelhoresDedicacoes);
 
             var nome1 = duplaFinal.First().Nome;
             var nome2 = duplaFinal.Last().Nome;
@@ -105,9 +115,11 @@ namespace IA___Fuzzy
             MontaMenuFinal();
         }
 
+
+
         #region Calculo Desempenho        
 
-        private static List<Usuario> CalcularDesempenhoRelacionamento(List<Usuario> usuarios, int novaOpcao)
+        private static List<Usuario> CalcularDesempenhoRelacionamento(List<Usuario> usuarios, int opcao)
         {
             List<int> cod = new List<int>();
             List<int> codRepetido = new List<int>();
@@ -140,19 +152,16 @@ namespace IA___Fuzzy
 
             foreach (var item in usuariosComTempoLivre)
             {
-                var usuario = new Usuario();
-                usuario = item;
-
                 if (user.Count < 2)
-                    user.Add(usuario);
+                    user.Add(item);
                 else if (user.Count == 2)
                 {
-                    var usuarioComMenorTempoLivre = user.Where(w => w.QuantidadeHorasTempoLivre < usuario.QuantidadeHorasTempoLivre).FirstOrDefault();
+                    var usuarioComMenorTempoLivre = user.Where(w => w.QuantidadeHorasTempoLivre < item.QuantidadeHorasTempoLivre).FirstOrDefault();
 
                     if (usuarioComMenorTempoLivre != null)
                     {
                         user.Remove(usuarioComMenorTempoLivre);
-                        user.Add(usuario);
+                        user.Add(item);
                     }
                 }
             }
@@ -160,35 +169,131 @@ namespace IA___Fuzzy
             return user;
         }
 
-        private static List<Usuario> CalcularDesempenhoConfianca(List<Usuario> usuarios, int novaOpcao)
+        private static List<Usuario> CalcularDesempenhoNotas(List<Usuario> usuarios, int opcao)
+        {
+            List<Usuario> user = new List<Usuario>();
+
+            foreach (var item in usuarios)
+            {
+                if (user.Count < 2)
+                    user.Add(item);
+                else if (user.Count == 2)
+                {
+                    var usuarioComNotaMenor = new Usuario();
+
+                    if ((Disciplina)opcao == Disciplina.Programacao)
+                        usuarioComNotaMenor = user.Where(w => w.NotaProgramacao < item.NotaProgramacao).FirstOrDefault();
+                    else if ((Disciplina)opcao == Disciplina.EstruturaDados)
+                        usuarioComNotaMenor = user.Where(w => w.NotaEstruturaDados < item.NotaEstruturaDados).FirstOrDefault();
+                    else if ((Disciplina)opcao == Disciplina.BancoDados)
+                        usuarioComNotaMenor = user.Where(w => w.NotaBancoDados < item.NotaBancoDados).FirstOrDefault();
+                    else if ((Disciplina)opcao == Disciplina.Calculo)
+                        usuarioComNotaMenor = user.Where(w => w.NotaCalculo < item.NotaCalculo).FirstOrDefault();
+                    else if ((Disciplina)opcao == Disciplina.GerenciaProjetos)
+                        usuarioComNotaMenor = user.Where(w => w.NotaGerenciaProjetos < item.NotaGerenciaProjetos).FirstOrDefault();
+
+                    if (usuarioComNotaMenor != null)
+                    {
+                        user.Remove(usuarioComNotaMenor);
+                        user.Add(item);
+                    }
+                }
+            }
+
+            return user;
+        }
+
+        private static List<Usuario> CalcularDesempenhoConfianca(List<Usuario> usuarios, int opcao)
+        {
+            List<int> cod = new List<int>();
+            List<int> codRepetido = new List<int>();
+
+            foreach (var item in usuarios)
+            {
+                if (!cod.Exists(x => x == item.CodMaiorConfianca))
+                    cod.Add(item.CodMaiorConfianca);
+                else
+                {
+                    if (!codRepetido.Exists(x => x == item.CodMaiorConfianca))
+                        codRepetido.Add(item.CodMaiorConfianca);
+                }
+            }
+
+            var primeiroUsuario = usuarios.Where(w => w.Codigo == codRepetido.FirstOrDefault()).FirstOrDefault();
+            var segundoUsuario = usuarios.Where(w => w.Codigo == primeiroUsuario.CodMaiorConfianca).FirstOrDefault();
+
+            var retorno = new List<Usuario>();
+            retorno.Add(primeiroUsuario);
+            retorno.Add(segundoUsuario);
+
+            return retorno;
+        }
+
+        private static List<Usuario> CalcularDesempenhoAtividadesComum(List<Usuario> usuarios, int opcao)
+        {
+            List<int> cod = new List<int>();
+            List<int> codRepetido = new List<int>();
+
+            foreach (var item in usuarios)
+            {
+                if (!cod.Exists(x => x == item.CodMaiorAtividadesComum))
+                    cod.Add(item.CodMaiorAtividadesComum);
+                else
+                {
+                    if (!codRepetido.Exists(x => x == item.CodMaiorAtividadesComum))
+                        codRepetido.Add(item.CodMaiorAtividadesComum);
+                }
+            }
+
+            var primeiroUsuario = usuarios.Where(w => w.Codigo == codRepetido.FirstOrDefault()).FirstOrDefault();
+            var segundoUsuario = usuarios.Where(w => w.Codigo == primeiroUsuario.CodMaiorAtividadesComum).FirstOrDefault();
+
+            var retorno = new List<Usuario>();
+            retorno.Add(primeiroUsuario);
+            retorno.Add(segundoUsuario);
+
+            return retorno;
+        }
+
+        private static List<Usuario> CalcularDesempenhoDominioConteudo(List<Usuario> usuarios, int opcao)
+        {
+            List<Usuario> user = new List<Usuario>();
+
+            if ((Disciplina)opcao == Disciplina.Programacao)
+                user = usuarios.Where(w => w.PossuiDominioProgramacao).ToList();
+            else if ((Disciplina)opcao == Disciplina.EstruturaDados)
+                user = usuarios.Where(w => w.PossuiDominioEstruturaDados).ToList();
+            else if ((Disciplina)opcao == Disciplina.BancoDados)
+                user = usuarios.Where(w => w.PossuiDominioBancoDados).ToList();
+            else if ((Disciplina)opcao == Disciplina.Calculo)
+                user = usuarios.Where(w => w.PossuiDominioCalculo).ToList();
+            else if ((Disciplina)opcao == Disciplina.GerenciaProjetos)
+                user = usuarios.Where(w => w.PossuiDominioGerenciaProjetos).ToList();
+
+            var retorno = CalcularDesempenhoNotas(user, opcao);
+
+            return retorno;
+        }
+
+        private static List<Usuario> CalcularDesempenhoDedicacao(List<Usuario> usuarios, int opcao)
         {
             throw new NotImplementedException();
         }
 
-        private static List<Usuario> CalcularDesempenhoFaltas(List<Usuario> usuarios, int novaOpcao)
+        private static List<Usuario> CalcularDesempenhoFaltas(List<Usuario> usuarios, int opcao)
         {
             throw new NotImplementedException();
         }
 
-        private static List<Usuario> CalcularDesempenhoDominioConteudo(List<Usuario> usuarios, int novaOpcao)
-        {
-            throw new NotImplementedException();
-        }
 
-        private static List<Usuario> CalcularDesempenhoGostoComum(List<Usuario> usuarios, int novaOpcao)
-        {
-            throw new NotImplementedException();
-        }
 
-        private static List<Usuario> CalcularDesempenhoNotas(List<Usuario> usuarios, int novaOpcao)
+        private static List<Usuario> MontaMelhorDupla(List<Usuario> usuariosComMelhoresRelacionamento, List<Usuario> usuariosComMelhoresTempoLivres, List<Usuario> usuariosComMelhoresNotas,
+                                                        List<Usuario> usuariosComMelhoresConfianca, List<Usuario> usuariosComMelhoresAtividadesComum, List<Usuario> usuariosComMelhoresDominioConteudo,
+                                                        List<Usuario> usariosComMelhoresDedicacoes)
         {
-            throw new NotImplementedException();
-        }
-
-        private static List<Usuario> MontaMelhorDupla(List<Usuario> usuariosComMelhoresRelacionamento, List<Usuario> usuariosComMelhoresTempoLivres)
-        {
+            // Implementar (15 regras)
             //TODO
-            return usuariosComMelhoresRelacionamento;
+            return usariosComMelhoresDedicacoes;
         }
 
         #endregion
@@ -297,8 +402,8 @@ namespace IA___Fuzzy
     public enum VariavelPeso
     {
         Relacionamento = 1,
-        Notas = 2,
-        TempoLivre = 3,
+        TempoLivre = 2,
+        Notas = 3,
         Confiança = 4,
         AtividadesComum = 5,
         DominioConteudo = 6,

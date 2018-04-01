@@ -1,6 +1,6 @@
-1 | André   | 20 | Masculino | 3 | true  | 4
-2 | William | 21 | Masculino | 4 | false | null
-3 | João    | 22 | Masculino | 1 | true  | 8
-4 | Henrique| 23 | Masculino | 2 | false | null
-5 | Mauricio| 24 | Masculino | 1 | true  | 5
-6 | Anderson| 25 | Masculino | 2 | false | null
+1 | André   | 20 | Masculino | 3 | true  | 10 | 9   | 7,5 | 10	| 8   | 9,5 | 3 | 3 | true  | false | true  | true  | true
+2 | William | 21 | Masculino | 4 | false | 0  | 7   | 8   | 6   | 6   | 8   | 4 | 4 | true  | true  | true  | false | false
+3 | João    | 22 | Masculino | 1 | true  | 8  | 9   | 8,5 | 9,5 | 6   | 8,5 | 1 | 1 | true  | true  | true  | false | false
+4 | Henrique| 23 | Masculino | 2 | false | 0  | 10  | 9   | 9,5 | 7   | 6   | 2 | 2 | true  | true  | true  | false | true
+5 | Mauricio| 24 | Masculino | 1 | true  | 5  | 6   | 6   | 8   | 7,5 | 7   | 1 | 1 | false | false | true  | false | false
+6 | Anderson| 25 | Masculino | 2 | false | 0  | 6,5 | 6,5 | 7   | 6,5 | 8   | 1 | 1 | false | false | true  | true  | false
