@@ -41,6 +41,8 @@ namespace IA___Fuzzy
                 usuario.PossuiDominioBancoDados = bool.Parse(divisor[16].Trim());
                 usuario.PossuiDominioCalculo = bool.Parse(divisor[17].Trim());
                 usuario.PossuiDominioGerenciaProjetos = bool.Parse(divisor[18].Trim());
+                usuario.Dedicado = bool.Parse(divisor[19].Trim());
+                usuario.QuantidadeFaltas = int.Parse(divisor[20].Trim());
 
                 usuarios.Add(usuario);
             }
@@ -88,7 +90,6 @@ namespace IA___Fuzzy
         
         public static void MontaFuzzy(List<Usuario> usuarios, string opcao)
         {
-            //Retorno 2 melhores de cada variável
             List<Usuario> usuariosComMelhoresRelacionamento = CalcularDesempenhoRelacionamento(usuarios, int.Parse(opcao));
             List<Usuario> usuariosComMelhoresTempoLivres = CalcularDesempenhoTempoLivre(usuarios, int.Parse(opcao));
             List<Usuario> usuariosComMelhoresNotas = CalcularDesempenhoNotas(usuarios, int.Parse(opcao));
@@ -96,10 +97,12 @@ namespace IA___Fuzzy
             List<Usuario> usuariosComMelhoresAtividadesComum = CalcularDesempenhoAtividadesComum(usuarios, int.Parse(opcao));
             List<Usuario> usuariosComMelhoresDominioConteudo = CalcularDesempenhoDominioConteudo(usuarios, int.Parse(opcao));
             List<Usuario> usariosComMelhoresDedicacoes = CalcularDesempenhoDedicacao(usuarios, int.Parse(opcao));
-            /*List<Usuario> usuariosComMelhoresFaltas = CalcularDesempenhoFaltas(usuarios, novaOpcao);*/
+            List<Usuario> usuariosComMelhoresFaltas = CalcularDesempenhoFaltas(usuarios, int.Parse(opcao));
+
+
 
             List<Usuario> duplaFinal = MontaMelhorDupla(usuariosComMelhoresRelacionamento, usuariosComMelhoresTempoLivres, usuariosComMelhoresNotas, usuariosComMelhoresConfianca,
-                                                            usuariosComMelhoresAtividadesComum, usuariosComMelhoresDominioConteudo, usariosComMelhoresDedicacoes);
+                                                            usuariosComMelhoresAtividadesComum, usuariosComMelhoresDominioConteudo, usariosComMelhoresDedicacoes, usuariosComMelhoresFaltas);
 
             var nome1 = duplaFinal.First().Nome;
             var nome2 = duplaFinal.Last().Nome;
@@ -277,23 +280,169 @@ namespace IA___Fuzzy
 
         private static List<Usuario> CalcularDesempenhoDedicacao(List<Usuario> usuarios, int opcao)
         {
-            throw new NotImplementedException();
+            return usuarios.Where(w => w.Dedicado).ToList();
         }
 
         private static List<Usuario> CalcularDesempenhoFaltas(List<Usuario> usuarios, int opcao)
         {
-            throw new NotImplementedException();
+            List<Usuario> retorno = new List<Usuario>();
+
+            var usuarioOrdenadoPorFalta = usuarios.OrderBy(o => o.QuantidadeFaltas).ToList();
+
+            foreach (var item in usuarioOrdenadoPorFalta)
+            {
+                if (retorno.Count < 2)
+                    retorno.Add(item);
+                else if(retorno.Count >= 2)
+                {
+                    if (item.QuantidadeFaltas == retorno[1].QuantidadeFaltas)
+                        retorno.Add(item);
+                }
+
+            }
+
+            return retorno;
         }
 
+        //MAIS 2
 
 
         private static List<Usuario> MontaMelhorDupla(List<Usuario> usuariosComMelhoresRelacionamento, List<Usuario> usuariosComMelhoresTempoLivres, List<Usuario> usuariosComMelhoresNotas,
                                                         List<Usuario> usuariosComMelhoresConfianca, List<Usuario> usuariosComMelhoresAtividadesComum, List<Usuario> usuariosComMelhoresDominioConteudo,
-                                                        List<Usuario> usariosComMelhoresDedicacoes)
+                                                        List<Usuario> usariosComMelhoresDedicacoes, List<Usuario> usuariosComMelhoresFaltas)
         {
-            // Implementar (15 regras)
-            //TODO
-            return usariosComMelhoresDedicacoes;
+            //15 regras
+
+            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
+
+            List<Usuario> usuariosUnificados = new List<Usuario>();
+            usuariosUnificados.AddRange(usuariosComMelhoresRelacionamento);
+            usuariosUnificados.AddRange(usuariosComMelhoresTempoLivres);
+            usuariosUnificados.AddRange(usuariosComMelhoresNotas);
+            usuariosUnificados.AddRange(usuariosComMelhoresConfianca);
+            usuariosUnificados.AddRange(usuariosComMelhoresAtividadesComum);
+            usuariosUnificados.AddRange(usuariosComMelhoresDominioConteudo);
+            usuariosUnificados.AddRange(usariosComMelhoresDedicacoes);
+            usuariosUnificados.AddRange(usuariosComMelhoresFaltas);
+
+            int valorAtualDicionariobla;
+            foreach (var item in usuariosUnificados)
+            {
+                if (!dicionario.ContainsKey(item))
+                    dicionario.Add(item, 1);
+                else
+                {
+                    var sucesso = dicionario.TryGetValue(item, out valorAtualDicionariobla);
+                    if (sucesso)
+                        dicionario[item] = valorAtualDicionariobla + 1;
+                }
+            }
+
+
+            #region Monta Dicionário que retorna o Usuário junto com a quantidade que aparece
+
+            int valorAtualDicionario;
+            foreach (var item in usuariosComMelhoresRelacionamento)
+            {
+                if (!dicionario.ContainsKey(item))
+                    dicionario.Add(item, 1);
+                else
+                {
+                    var sucesso = dicionario.TryGetValue(item, out valorAtualDicionario);
+                    if (sucesso)
+                        dicionario[item] = valorAtualDicionario + 1;
+                }
+            }
+
+            foreach (var item in usuariosComMelhoresTempoLivres)
+            {
+                if (!dicionario.ContainsKey(item))
+                    dicionario.Add(item, 1);
+                else
+                {
+                    var sucesso = dicionario.TryGetValue(item, out valorAtualDicionario);
+                    if (sucesso)
+                        dicionario[item] = valorAtualDicionario + 1;
+                }
+            }
+
+            foreach (var item in usuariosComMelhoresNotas)
+            {
+                if (!dicionario.Any(x => x.Key.Codigo == item.Codigo))
+                    dicionario.Add(item, 1);
+                else
+                {
+                    var sucesso = dicionario.TryGetValue(item, out valorAtualDicionario);
+                    if (sucesso)
+                        dicionario[item] = valorAtualDicionario + 1;
+                }
+            }
+
+            foreach (var item in usuariosComMelhoresConfianca)
+            {
+                if (!dicionario.Any(x => x.Key.Codigo == item.Codigo))
+                    dicionario.Add(item, 1);
+                else
+                {
+                    var sucesso = dicionario.TryGetValue(item, out valorAtualDicionario);
+                    if (sucesso)
+                        dicionario[item] = valorAtualDicionario + 1;
+                }
+            }
+
+            foreach (var item in usuariosComMelhoresAtividadesComum)
+            {
+                if (!dicionario.Any(x => x.Key.Codigo == item.Codigo))
+                    dicionario.Add(item, 1);
+                else
+                {
+                    var sucesso = dicionario.TryGetValue(item, out valorAtualDicionario);
+                    if (sucesso)
+                        dicionario[item] = valorAtualDicionario + 1;
+                }
+            }
+
+            foreach (var item in usuariosComMelhoresDominioConteudo)
+            {
+                if (!dicionario.Any(x => x.Key.Codigo == item.Codigo))
+                    dicionario.Add(item, 1);
+                else
+                {
+                    var sucesso = dicionario.TryGetValue(item, out valorAtualDicionario);
+                    if (sucesso)
+                        dicionario[item] = valorAtualDicionario + 1;
+                }
+            }
+
+            foreach (var item in usariosComMelhoresDedicacoes)
+            {
+                if (!dicionario.Any(x => x.Key.Codigo == item.Codigo))
+                    dicionario.Add(item, 1);
+                else
+                {
+                    var sucesso = dicionario.TryGetValue(item, out valorAtualDicionario);
+                    if (sucesso)
+                        dicionario[item] = valorAtualDicionario + 1;
+                }
+            }
+
+            foreach (var item in usuariosComMelhoresFaltas)
+            {
+                if (!dicionario.Any(x => x.Key.Codigo == item.Codigo))
+                    dicionario.Add(item, 1);
+                else
+                {
+                    var sucesso = dicionario.TryGetValue(item, out valorAtualDicionario);
+                    if (sucesso)
+                        dicionario[item] = valorAtualDicionario + 1;
+                }
+            }
+
+            #endregion
+
+            var teste = dicionario;
+
+            return usuariosComMelhoresFaltas;
         }
 
         #endregion

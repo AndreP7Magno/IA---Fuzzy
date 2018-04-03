@@ -21,5 +21,7 @@
         public bool PossuiDominioBancoDados { get; set; }
         public bool PossuiDominioCalculo { get; set; }
         public bool PossuiDominioGerenciaProjetos { get; set; }
+        public bool Dedicado { get; set; }
+        public int QuantidadeFaltas { get; set; }
     }
 }
