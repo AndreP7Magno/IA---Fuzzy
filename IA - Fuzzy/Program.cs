@@ -99,23 +99,41 @@ namespace IA___Fuzzy
             List<Usuario> usariosComMelhoresDedicacoes = CalcularDesempenhoDedicacao(usuarios, int.Parse(opcao));
             List<Usuario> usuariosComMelhoresFaltas = CalcularDesempenhoFaltas(usuarios, int.Parse(opcao));
 
-
-
-            List<Usuario> duplaFinal = MontaMelhorDupla(usuariosComMelhoresRelacionamento, usuariosComMelhoresTempoLivres, usuariosComMelhoresNotas, usuariosComMelhoresConfianca,
+            List<UsuarioPorcentagem> duplaFinal = MontaMelhorDupla(usuariosComMelhoresRelacionamento, usuariosComMelhoresTempoLivres, usuariosComMelhoresNotas, usuariosComMelhoresConfianca,
                                                             usuariosComMelhoresAtividadesComum, usuariosComMelhoresDominioConteudo, usariosComMelhoresDedicacoes, usuariosComMelhoresFaltas);
 
-            var nome1 = duplaFinal.First().Nome;
-            var nome2 = duplaFinal.Last().Nome;
+            if (duplaFinal.Count == 2) {
+                var nome1 = duplaFinal.First().Usuario.Nome;
+                var nome2 = duplaFinal.Last().Usuario.Nome;
 
-            Console.Clear();
-            Console.WriteLine("");
-            Console.WriteLine("\tMelhor dupla formada:");
-            Console.WriteLine("1. " + nome1);
-            Console.WriteLine("2. " + nome2 );
-            Console.WriteLine("");
-            Console.WriteLine("Clique para continuar.");
-            Console.ReadKey();
-            MontaMenuFinal();
+                Console.Clear();
+                Console.WriteLine("");
+                Console.WriteLine("\tMelhor dupla formada junto com suas porcentagens de qualificações:");
+                Console.WriteLine("");
+                Console.WriteLine("1. " + nome1 + " com " + duplaFinal.First().Porcentagem + " !");
+                Console.WriteLine("2. " + nome2 + " com " + duplaFinal.Last().Porcentagem + " !");
+                Console.WriteLine("");
+                Console.WriteLine("Clique para continuar.");
+                Console.ReadKey();
+                MontaMenuFinal();
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("");
+                Console.WriteLine("\tMelhor dupla formada junto com suas porcentagens de qualificações:");
+                Console.WriteLine("");
+                Console.WriteLine("1. " + duplaFinal[0].Usuario.Nome + " com " + duplaFinal[0].Porcentagem + " !");
+                Console.WriteLine("2. " + duplaFinal[1].Usuario.Nome + " com " + duplaFinal[1].Porcentagem + " !");
+                Console.WriteLine("");
+                Console.WriteLine("\tPode integrar também à eles o terceiro melhor perante suas qualificações:");
+                Console.WriteLine("3. " + duplaFinal[2].Usuario.Nome + " com " + duplaFinal[2].Porcentagem + " !");
+                Console.WriteLine("");
+
+                Console.WriteLine("Clique para continuar.");
+                Console.ReadKey();
+                MontaMenuFinal();
+            }
         }
 
 
@@ -307,7 +325,7 @@ namespace IA___Fuzzy
         //MAIS 2
 
 
-        private static List<Usuario> MontaMelhorDupla(List<Usuario> usuariosComMelhoresRelacionamento, List<Usuario> usuariosComMelhoresTempoLivres, List<Usuario> usuariosComMelhoresNotas,
+        private static List<UsuarioPorcentagem> MontaMelhorDupla(List<Usuario> usuariosComMelhoresRelacionamento, List<Usuario> usuariosComMelhoresTempoLivres, List<Usuario> usuariosComMelhoresNotas,
                                                         List<Usuario> usuariosComMelhoresConfianca, List<Usuario> usuariosComMelhoresAtividadesComum, List<Usuario> usuariosComMelhoresDominioConteudo,
                                                         List<Usuario> usariosComMelhoresDedicacoes, List<Usuario> usuariosComMelhoresFaltas)
         {
@@ -325,124 +343,45 @@ namespace IA___Fuzzy
             usuariosUnificados.AddRange(usariosComMelhoresDedicacoes);
             usuariosUnificados.AddRange(usuariosComMelhoresFaltas);
 
-            int valorAtualDicionariobla;
+            int valorAtualDicionario;
             foreach (var item in usuariosUnificados)
             {
                 if (!dicionario.ContainsKey(item))
                     dicionario.Add(item, 1);
                 else
                 {
-                    var sucesso = dicionario.TryGetValue(item, out valorAtualDicionariobla);
-                    if (sucesso)
-                        dicionario[item] = valorAtualDicionariobla + 1;
-                }
-            }
-
-
-            #region Monta Dicionário que retorna o Usuário junto com a quantidade que aparece
-
-            int valorAtualDicionario;
-            foreach (var item in usuariosComMelhoresRelacionamento)
-            {
-                if (!dicionario.ContainsKey(item))
-                    dicionario.Add(item, 1);
-                else
-                {
                     var sucesso = dicionario.TryGetValue(item, out valorAtualDicionario);
                     if (sucesso)
                         dicionario[item] = valorAtualDicionario + 1;
                 }
             }
 
-            foreach (var item in usuariosComMelhoresTempoLivres)
+            var dicionarioOrdenado = dicionario.OrderByDescending(o => o.Value).ToDictionary(o => o.Key);
+
+            var usuariosPorcentagem = new List<UsuarioPorcentagem>();
+            foreach (var item in dicionarioOrdenado)
             {
-                if (!dicionario.ContainsKey(item))
-                    dicionario.Add(item, 1);
-                else
+                var populaUsuarioPorcentagem = new UsuarioPorcentagem()
                 {
-                    var sucesso = dicionario.TryGetValue(item, out valorAtualDicionario);
-                    if (sucesso)
-                        dicionario[item] = valorAtualDicionario + 1;
+                    Usuario = item.Key,
+                    Porcentagem = item.Value.Value.ToString() + "0%"
+                };
+                usuariosPorcentagem.Add(populaUsuarioPorcentagem);
+            }
+
+            List<UsuarioPorcentagem> retorno = new List<UsuarioPorcentagem>();
+            foreach (var item in usuariosPorcentagem)
+            {
+                if (retorno.Count < 2)
+                    retorno.Add(item);
+                else if (retorno.Count >= 2)
+                {
+                    if (item.Porcentagem.Equals(retorno[1].Porcentagem))
+                        retorno.Add(item);
                 }
             }
 
-            foreach (var item in usuariosComMelhoresNotas)
-            {
-                if (!dicionario.Any(x => x.Key.Codigo == item.Codigo))
-                    dicionario.Add(item, 1);
-                else
-                {
-                    var sucesso = dicionario.TryGetValue(item, out valorAtualDicionario);
-                    if (sucesso)
-                        dicionario[item] = valorAtualDicionario + 1;
-                }
-            }
-
-            foreach (var item in usuariosComMelhoresConfianca)
-            {
-                if (!dicionario.Any(x => x.Key.Codigo == item.Codigo))
-                    dicionario.Add(item, 1);
-                else
-                {
-                    var sucesso = dicionario.TryGetValue(item, out valorAtualDicionario);
-                    if (sucesso)
-                        dicionario[item] = valorAtualDicionario + 1;
-                }
-            }
-
-            foreach (var item in usuariosComMelhoresAtividadesComum)
-            {
-                if (!dicionario.Any(x => x.Key.Codigo == item.Codigo))
-                    dicionario.Add(item, 1);
-                else
-                {
-                    var sucesso = dicionario.TryGetValue(item, out valorAtualDicionario);
-                    if (sucesso)
-                        dicionario[item] = valorAtualDicionario + 1;
-                }
-            }
-
-            foreach (var item in usuariosComMelhoresDominioConteudo)
-            {
-                if (!dicionario.Any(x => x.Key.Codigo == item.Codigo))
-                    dicionario.Add(item, 1);
-                else
-                {
-                    var sucesso = dicionario.TryGetValue(item, out valorAtualDicionario);
-                    if (sucesso)
-                        dicionario[item] = valorAtualDicionario + 1;
-                }
-            }
-
-            foreach (var item in usariosComMelhoresDedicacoes)
-            {
-                if (!dicionario.Any(x => x.Key.Codigo == item.Codigo))
-                    dicionario.Add(item, 1);
-                else
-                {
-                    var sucesso = dicionario.TryGetValue(item, out valorAtualDicionario);
-                    if (sucesso)
-                        dicionario[item] = valorAtualDicionario + 1;
-                }
-            }
-
-            foreach (var item in usuariosComMelhoresFaltas)
-            {
-                if (!dicionario.Any(x => x.Key.Codigo == item.Codigo))
-                    dicionario.Add(item, 1);
-                else
-                {
-                    var sucesso = dicionario.TryGetValue(item, out valorAtualDicionario);
-                    if (sucesso)
-                        dicionario[item] = valorAtualDicionario + 1;
-                }
-            }
-
-            #endregion
-
-            var teste = dicionario;
-
-            return usuariosComMelhoresFaltas;
+            return retorno;
         }
 
         #endregion
