@@ -7,7 +7,6 @@
         public int Idade { get; set; }
         public string Sexo { get; set; }
         public int CodMelhorRelacionado { get; set; }
-        public bool PossuiTempoLivre { get; set; }
         public int QuantidadeHorasTempoLivre { get; set; }
         public double NotaProgramacao { get; set; }
         public double NotaEstruturaDados { get; set; }
@@ -23,5 +22,7 @@
         public bool PossuiDominioGerenciaProjetos { get; set; }
         public bool Dedicado { get; set; }
         public int QuantidadeFaltas { get; set; }
+        public bool EhInteligente { get; set; }
+        public bool EhComunicativo { get; set; }
     }
 }

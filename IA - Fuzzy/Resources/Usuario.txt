@@ -1,6 +1,30 @@
-1 | André   | 20 | Masculino | 3 | true  | 10 | 9   | 7,5 | 10	| 8   | 9,5 | 3 | 3 | true  | false | true  | true  | true  | true  | 12
-2 | William | 21 | Masculino | 4 | false | 0  | 7   | 8   | 6   | 6   | 8   | 4 | 4 | true  | true  | true  | false | false | true  | 6
-3 | João    | 22 | Masculino | 1 | true  | 8  | 9   | 8,5 | 9,5 | 6   | 8,5 | 1 | 1 | true  | true  | true  | false | false | true  | 18
-4 | Henrique| 23 | Masculino | 2 | false | 0  | 10  | 9   | 9,5 | 7   | 6   | 2 | 2 | true  | true  | true  | false | true  | false | 6
-5 | Mauricio| 24 | Masculino | 1 | true  | 5  | 6   | 6   | 8   | 7,5 | 7   | 1 | 1 | false | false | true  | false | false | true  | 0
-6 | Anderson| 25 | Masculino | 2 | false | 0  | 6,5 | 6,5 | 7   | 6,5 | 8   | 1 | 1 | false | false | true  | true  | false | false | 6
+1  | André    | 20 | Masculino | 3  | 0  | 8   | 7,5 | 10  | 8   | 9,5 | 3 | 3 | true  | false | true  | true  | true  | true  | 12 | true  | true
+2  | Nicole   | 21 | Feminino  | 4  | 8  | 7   | 8   | 6   | 6   | 8   | 4 | 4 | true  | true  | true  | false | false | true  | 6  | false | false
+3  | João     | 22 | Masculino | 1  | 8  | 8,5 | 8,5 | 6   | 7   | 8,5 | 1 | 1 | true  | true  | true  | false | false | true  | 18 | true  | true
+4  | Eduarda  | 23 | Feminino  | 2  | 0  | 10  | 9   | 9,5 | 7   | 6   | 2 | 2 | true  | true  | true  | false | true  | false | 6  | false | false
+5  | Mauricio | 24 | Masculino | 1  | 5  | 6   | 6   | 8   | 7,5 | 7   | 1 | 1 | false | false | true  | false | false | true  | 0  | true  | true
+6  | Ágatha   | 25 | Feminino  | 15 | 0  | 6,5 | 6,5 | 7   | 6,5 | 8   | 1 | 1 | false | false | true  | true  | false | false | 6  | false | false
+7  | Henrique | 18 | Masculino | 1  | 10 | 9   | 7,5 | 10  | 8   | 9,5 | 3 | 3 | true  | false | true  | true  | true  | true  | 12 | true  | true
+8  | Vitória  | 19 | Feminino  | 4  | 0  | 7   | 8   | 6   | 6   | 8   | 4 | 4 | true  | true  | true  | false | false | true  | 6  | false | false
+9  | William  | 20 | Masculino | 20 | 8  | 9   | 8,5 | 9,5 | 6   | 8,5 | 1 | 1 | true  | true  | true  | false | false | true  | 18 | true  | true
+10 | Larissa  | 21 | Feminino  | 22 | 0  | 10  | 9   | 9,5 | 7   | 6   | 2 | 2 | true  | true  | true  | false | true  | false | 6  | false | false
+11 | Vitor    | 22 | Masculino | 30 | 5  | 6   | 6   | 8   | 7,5 | 7   | 1 | 1 | false | false | true  | false | false | true  | 0  | true  | true
+12 | Melissa  | 23 | Feminino  | 21 | 0  | 6,5 | 6,5 | 7   | 6,5 | 8   | 1 | 1 | false | false | true  | true  | false | false | 6  | false | false
+13 | Breno    | 24 | Masculino | 7  | 10 | 9   | 7,5 | 10  | 8   | 9,5 | 3 | 3 | true  | false | true  | true  | true  | true  | 12 | true  | true
+14 | Isabelle | 25 | Feminino  | 3  | 0  | 7   | 8   | 6   | 6   | 8   | 4 | 4 | true  | true  | true  | false | false | true  | 6  | false | false
+15 | Davi     | 18 | Masculino | 1  | 8  | 9   | 8,5 | 9,5 | 6   | 8,5 | 1 | 1 | true  | true  | true  | false | false | true  | 18 | true  | true
+16 | Giovanna | 19 | Feminino  | 4  | 0  | 10  | 9   | 9,5 | 7   | 6   | 2 | 2 | true  | true  | true  | false | true  | false | 6  | false | false
+17 | Kauan    | 20 | Masculino | 18 | 5  | 6   | 6   | 8   | 7,5 | 7   | 1 | 1 | false | false | true  | false | false | true  | 0  | true  | true
+18 | Carolina | 21 | Feminino  | 15 | 0  | 6,5 | 6,5 | 7   | 6,5 | 8   | 1 | 1 | false | false | true  | true  | false | false | 6  | false | false
+19 | Luis     | 22 | Masculino | 28 | 10 | 9   | 7,5 | 10  | 8   | 9,5 | 3 | 3 | true  | false | true  | true  | true  | true  | 12 | true  | true
+20 | Manuela  | 23 | Feminino  | 8  | 0  | 7   | 8   | 6   | 6   | 8   | 4 | 4 | true  | true  | true  | false | false | true  | 6  | false | false
+21 | Thiago   | 24 | Masculino | 6  | 8  | 9   | 8,5 | 9,5 | 6   | 8,5 | 1 | 1 | true  | true  | true  | false | false | true  | 18 | true  | true
+22 | Carla    | 25 | Feminino  | 1  | 0  | 10  | 9   | 9,5 | 7   | 6   | 2 | 2 | true  | true  | true  | false | true  | false | 6  | false | false
+23 | Diego    | 18 | Masculino | 2  | 5  | 6   | 6   | 8   | 7,5 | 7   | 1 | 1 | false | false | true  | false | false | true  | 0  | true  | true
+24 | Sofia    | 19 | Feminino  | 9  | 0  | 6,5 | 6,5 | 7   | 6,5 | 8   | 1 | 1 | false | false | true  | true  | false | false | 6  | false | false
+25 | Pedro    | 20 | Masculino | 21 | 10 | 9   | 7,5 | 10  | 8   | 9,5 | 3 | 3 | true  | false | true  | true  | true  | true  | 12 | true  | true
+26 | Beatriz  | 21 | Feminino  | 15 | 0  | 7   | 8   | 6   | 6   | 8   | 4 | 4 | true  | true  | true  | false | false | true  | 6  | false | false
+27 | Kai      | 22 | Masculino | 16 | 8  | 9   | 8,5 | 9,5 | 6   | 8,5 | 1 | 1 | true  | true  | true  | false | false | true  | 18 | true  | true
+28 | Rebeca   | 23 | Feminino  | 25 | 0  | 10  | 9   | 9,5 | 7   | 6   | 2 | 2 | true  | true  | true  | false | true  | false | 6  | false | false
+29 | Rafael   | 24 | Masculino | 30 | 5  | 6   | 6   | 8   | 7,5 | 7   | 1 | 1 | false | false | true  | false | false | true  | 0  | true  | true
+30 | Marisa   | 25 | Feminino  | 1  | 0  | 6,5 | 6,5 | 7   | 6,5 | 8   | 1 | 1 | false | false | true  | true  | false | false | 6  | false | false

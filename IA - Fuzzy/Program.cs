@@ -27,22 +27,23 @@ namespace IA___Fuzzy
                 usuario.Idade = int.Parse(divisor[2].Trim());
                 usuario.Sexo = divisor[3].Trim();
                 usuario.CodMelhorRelacionado = int.Parse(divisor[4].Trim());
-                usuario.PossuiTempoLivre = bool.Parse(divisor[5].Trim());
-                usuario.QuantidadeHorasTempoLivre = int.Parse(divisor[6].Trim());
-                usuario.NotaProgramacao = double.Parse(divisor[7].Trim());
-                usuario.NotaEstruturaDados = double.Parse(divisor[8].Trim());
-                usuario.NotaBancoDados = double.Parse(divisor[9].Trim());
-                usuario.NotaCalculo = double.Parse(divisor[10].Trim());
-                usuario.NotaGerenciaProjetos = double.Parse(divisor[11].Trim());
-                usuario.CodMaiorConfianca = int.Parse(divisor[12].Trim());
-                usuario.CodMaiorAtividadesComum = int.Parse(divisor[13].Trim());
-                usuario.PossuiDominioProgramacao = bool.Parse(divisor[14].Trim());
-                usuario.PossuiDominioEstruturaDados = bool.Parse(divisor[15].Trim());
-                usuario.PossuiDominioBancoDados = bool.Parse(divisor[16].Trim());
-                usuario.PossuiDominioCalculo = bool.Parse(divisor[17].Trim());
-                usuario.PossuiDominioGerenciaProjetos = bool.Parse(divisor[18].Trim());
-                usuario.Dedicado = bool.Parse(divisor[19].Trim());
-                usuario.QuantidadeFaltas = int.Parse(divisor[20].Trim());
+                usuario.QuantidadeHorasTempoLivre = int.Parse(divisor[5].Trim());
+                usuario.NotaProgramacao = double.Parse(divisor[6].Trim());
+                usuario.NotaEstruturaDados = double.Parse(divisor[7].Trim());
+                usuario.NotaBancoDados = double.Parse(divisor[8].Trim());
+                usuario.NotaCalculo = double.Parse(divisor[9].Trim());
+                usuario.NotaGerenciaProjetos = double.Parse(divisor[10].Trim());
+                usuario.CodMaiorConfianca = int.Parse(divisor[11].Trim());
+                usuario.CodMaiorAtividadesComum = int.Parse(divisor[12].Trim());
+                usuario.PossuiDominioProgramacao = bool.Parse(divisor[13].Trim());
+                usuario.PossuiDominioEstruturaDados = bool.Parse(divisor[14].Trim());
+                usuario.PossuiDominioBancoDados = bool.Parse(divisor[15].Trim());
+                usuario.PossuiDominioCalculo = bool.Parse(divisor[16].Trim());
+                usuario.PossuiDominioGerenciaProjetos = bool.Parse(divisor[17].Trim());
+                usuario.Dedicado = bool.Parse(divisor[18].Trim());
+                usuario.QuantidadeFaltas = int.Parse(divisor[19].Trim());
+                usuario.EhInteligente = bool.Parse(divisor[20].Trim());
+                usuario.EhComunicativo = bool.Parse(divisor[21].Trim());
 
                 usuarios.Add(usuario);
             }
@@ -98,9 +99,12 @@ namespace IA___Fuzzy
             List<Usuario> usuariosComMelhoresDominioConteudo = CalcularDesempenhoDominioConteudo(usuarios, int.Parse(opcao));
             List<Usuario> usariosComMelhoresDedicacoes = CalcularDesempenhoDedicacao(usuarios, int.Parse(opcao));
             List<Usuario> usuariosComMelhoresFaltas = CalcularDesempenhoFaltas(usuarios, int.Parse(opcao));
+            List<Usuario> usuariosMaisInteligentes = CalcularDesempenhoInteligencia(usuarios, int.Parse(opcao));
+            List<Usuario> usuariosMaisComunicativos = CalcularDesempenhoComunicacao(usuarios, int.Parse(opcao));
 
             List<UsuarioPorcentagem> duplaFinal = MontaMelhorDupla(usuariosComMelhoresRelacionamento, usuariosComMelhoresTempoLivres, usuariosComMelhoresNotas, usuariosComMelhoresConfianca,
-                                                            usuariosComMelhoresAtividadesComum, usuariosComMelhoresDominioConteudo, usariosComMelhoresDedicacoes, usuariosComMelhoresFaltas);
+                                                            usuariosComMelhoresAtividadesComum, usuariosComMelhoresDominioConteudo, usariosComMelhoresDedicacoes, usuariosComMelhoresFaltas,
+                                                            usuariosMaisInteligentes, usuariosMaisComunicativos);
 
             if (duplaFinal.Count == 2) {
                 var nome1 = duplaFinal.First().Usuario.Nome;
@@ -129,151 +133,187 @@ namespace IA___Fuzzy
                 Console.WriteLine("\tPode integrar também à eles o terceiro melhor perante suas qualificações:");
                 Console.WriteLine("3. " + duplaFinal[2].Usuario.Nome + " com " + duplaFinal[2].Porcentagem + " !");
                 Console.WriteLine("");
-
                 Console.WriteLine("Clique para continuar.");
                 Console.ReadKey();
                 MontaMenuFinal();
             }
         }
 
-
-
         #region Calculo Desempenho        
 
         private static List<Usuario> CalcularDesempenhoRelacionamento(List<Usuario> usuarios, int opcao)
         {
-            List<int> cod = new List<int>();
-            List<int> codRepetido = new List<int>();
+            Dictionary<int, int> dicionario = new Dictionary<int, int>();
 
             foreach (var item in usuarios)
             {
-                if (!cod.Exists(x => x == item.CodMelhorRelacionado))
-                    cod.Add(item.CodMelhorRelacionado);
+                if (!dicionario.ContainsKey(item.CodMelhorRelacionado))
+                    dicionario.Add(item.CodMelhorRelacionado, 1);
                 else
                 {
-                    if (!codRepetido.Exists(x => x == item.CodMelhorRelacionado))
-                        codRepetido.Add(item.CodMelhorRelacionado);
+                    var sucesso = dicionario.TryGetValue(item.CodMelhorRelacionado, out int valorAtualDicionario);
+                    if (sucesso)
+                        dicionario[item.CodMelhorRelacionado] = valorAtualDicionario + 1;
                 }
             }
 
-            var primeiroUsuario = usuarios.Where(w => w.Codigo == codRepetido.FirstOrDefault()).FirstOrDefault();
-            var segundoUsuario = usuarios.Where(w => w.Codigo == primeiroUsuario.CodMelhorRelacionado).FirstOrDefault();
+            var dicionarioOrdenado = dicionario.OrderByDescending(o => o.Value).ToDictionary(o => o.Key);
 
-            var retorno = new List<Usuario>();
-            retorno.Add(primeiroUsuario);
-            retorno.Add(segundoUsuario);
+            var usuariosOrdenados = new List<Usuario>();
+            foreach (var item in dicionarioOrdenado)
+            {
+                var populaUsuario = new Usuario()
+                {
+                    CodMelhorRelacionado = item.Key
+                };
+                usuariosOrdenados.Add(populaUsuario);
+            }
 
-            return retorno;
+            var usuarioFinal = new List<Usuario>();
+            foreach (var item in usuariosOrdenados)
+            {
+                var user = usuarios.Where(w => w.Codigo == item.CodMelhorRelacionado).FirstOrDefault();
+                usuarioFinal.Add(user);
+            }
+
+            return usuarioFinal.Take(6).ToList();
         }
 
         private static List<Usuario> CalcularDesempenhoTempoLivre(List<Usuario> usuarios, int opcao)
         {
-            var usuariosComTempoLivre = usuarios.Where(w => w.PossuiTempoLivre).ToList();
-            List<Usuario> user = new List<Usuario>();
+            Dictionary<int, int> dicionario = new Dictionary<int, int>();
 
-            foreach (var item in usuariosComTempoLivre)
+            foreach (var item in usuarios)
             {
-                if (user.Count < 2)
-                    user.Add(item);
-                else if (user.Count == 2)
+                if (item.QuantidadeHorasTempoLivre != 0)
                 {
-                    var usuarioComMenorTempoLivre = user.Where(w => w.QuantidadeHorasTempoLivre < item.QuantidadeHorasTempoLivre).FirstOrDefault();
-
-                    if (usuarioComMenorTempoLivre != null)
+                    if (!dicionario.ContainsKey(item.QuantidadeHorasTempoLivre))
+                        dicionario.Add(item.QuantidadeHorasTempoLivre, 1);
+                    else
                     {
-                        user.Remove(usuarioComMenorTempoLivre);
-                        user.Add(item);
+                        var sucesso = dicionario.TryGetValue(item.QuantidadeHorasTempoLivre, out int valorAtualDicionario);
+                        if (sucesso)
+                            dicionario[item.QuantidadeHorasTempoLivre] = valorAtualDicionario + 1;
                     }
                 }
             }
 
-            return user;
+            var dicionarioOrdenado = dicionario.OrderByDescending(o => o.Value).ToDictionary(o => o.Key);
+
+            var usuariosOrdenados = new List<Usuario>();
+            foreach (var item in dicionarioOrdenado)
+            {
+                var populaUsuario = new Usuario()
+                {
+                    QuantidadeHorasTempoLivre = item.Key
+                };
+                usuariosOrdenados.Add(populaUsuario);
+            }
+
+            var usuarioFinal = new List<Usuario>();
+            foreach (var item in usuariosOrdenados)
+            {
+                var user = usuarios.Where(w => w.QuantidadeHorasTempoLivre == item.QuantidadeHorasTempoLivre).ToList();
+                usuarioFinal.AddRange(user);
+            }
+
+            return usuarioFinal.Take(6).ToList();
+
         }
 
         private static List<Usuario> CalcularDesempenhoNotas(List<Usuario> usuarios, int opcao)
         {
-            List<Usuario> user = new List<Usuario>();
 
-            foreach (var item in usuarios)
-            {
-                if (user.Count < 2)
-                    user.Add(item);
-                else if (user.Count == 2)
-                {
-                    var usuarioComNotaMenor = new Usuario();
+            List<Usuario> retorno = new List<Usuario>();
 
-                    if ((Disciplina)opcao == Disciplina.Programacao)
-                        usuarioComNotaMenor = user.Where(w => w.NotaProgramacao < item.NotaProgramacao).FirstOrDefault();
-                    else if ((Disciplina)opcao == Disciplina.EstruturaDados)
-                        usuarioComNotaMenor = user.Where(w => w.NotaEstruturaDados < item.NotaEstruturaDados).FirstOrDefault();
-                    else if ((Disciplina)opcao == Disciplina.BancoDados)
-                        usuarioComNotaMenor = user.Where(w => w.NotaBancoDados < item.NotaBancoDados).FirstOrDefault();
-                    else if ((Disciplina)opcao == Disciplina.Calculo)
-                        usuarioComNotaMenor = user.Where(w => w.NotaCalculo < item.NotaCalculo).FirstOrDefault();
-                    else if ((Disciplina)opcao == Disciplina.GerenciaProjetos)
-                        usuarioComNotaMenor = user.Where(w => w.NotaGerenciaProjetos < item.NotaGerenciaProjetos).FirstOrDefault();
+            if ((Disciplina)opcao == Disciplina.Programacao)
+                retorno = usuarios.OrderByDescending(o => o.NotaProgramacao).Take(6).ToList();
+            else if ((Disciplina)opcao == Disciplina.EstruturaDados)
+                retorno = usuarios.OrderByDescending(o => o.NotaEstruturaDados).Take(6).ToList();
+            else if ((Disciplina)opcao == Disciplina.BancoDados)
+                retorno = usuarios.OrderByDescending(o => o.NotaBancoDados).Take(6).ToList();
+            else if ((Disciplina)opcao == Disciplina.Calculo)
+                retorno = usuarios.OrderByDescending(o => o.NotaCalculo).Take(6).ToList();
+            else if ((Disciplina)opcao == Disciplina.GerenciaProjetos)
+                retorno = usuarios.OrderByDescending(o => o.NotaGerenciaProjetos).Take(6).ToList();
 
-                    if (usuarioComNotaMenor != null)
-                    {
-                        user.Remove(usuarioComNotaMenor);
-                        user.Add(item);
-                    }
-                }
-            }
-
-            return user;
+            return retorno;
         }
 
         private static List<Usuario> CalcularDesempenhoConfianca(List<Usuario> usuarios, int opcao)
         {
-            List<int> cod = new List<int>();
-            List<int> codRepetido = new List<int>();
+            Dictionary<int, int> dicionario = new Dictionary<int, int>();
 
             foreach (var item in usuarios)
             {
-                if (!cod.Exists(x => x == item.CodMaiorConfianca))
-                    cod.Add(item.CodMaiorConfianca);
+                if (!dicionario.ContainsKey(item.CodMaiorConfianca))
+                    dicionario.Add(item.CodMaiorConfianca, 1);
                 else
                 {
-                    if (!codRepetido.Exists(x => x == item.CodMaiorConfianca))
-                        codRepetido.Add(item.CodMaiorConfianca);
+                    var sucesso = dicionario.TryGetValue(item.CodMaiorConfianca, out int valorAtualDicionario);
+                    if (sucesso)
+                        dicionario[item.CodMaiorConfianca] = valorAtualDicionario + 1;
                 }
             }
 
-            var primeiroUsuario = usuarios.Where(w => w.Codigo == codRepetido.FirstOrDefault()).FirstOrDefault();
-            var segundoUsuario = usuarios.Where(w => w.Codigo == primeiroUsuario.CodMaiorConfianca).FirstOrDefault();
+            var dicionarioOrdenado = dicionario.OrderByDescending(o => o.Value).ToDictionary(o => o.Key);
 
-            var retorno = new List<Usuario>();
-            retorno.Add(primeiroUsuario);
-            retorno.Add(segundoUsuario);
+            var usuariosOrdenados = new List<Usuario>();
+            foreach (var item in dicionarioOrdenado)
+            {
+                var populaUsuario = new Usuario()
+                {
+                    CodMaiorConfianca = item.Key
+                };
+                usuariosOrdenados.Add(populaUsuario);
+            }
 
-            return retorno;
+            var usuarioFinal = new List<Usuario>();
+            foreach (var item in usuariosOrdenados)
+            {
+                var user = usuarios.Where(w => w.Codigo == item.CodMaiorConfianca).FirstOrDefault();
+                usuarioFinal.Add(user);
+            }
+
+            return usuarioFinal.Take(6).ToList();
         }
 
         private static List<Usuario> CalcularDesempenhoAtividadesComum(List<Usuario> usuarios, int opcao)
         {
-            List<int> cod = new List<int>();
-            List<int> codRepetido = new List<int>();
+            Dictionary<int, int> dicionario = new Dictionary<int, int>();
 
             foreach (var item in usuarios)
             {
-                if (!cod.Exists(x => x == item.CodMaiorAtividadesComum))
-                    cod.Add(item.CodMaiorAtividadesComum);
+                if (!dicionario.ContainsKey(item.CodMaiorAtividadesComum))
+                    dicionario.Add(item.CodMaiorAtividadesComum, 1);
                 else
                 {
-                    if (!codRepetido.Exists(x => x == item.CodMaiorAtividadesComum))
-                        codRepetido.Add(item.CodMaiorAtividadesComum);
+                    var sucesso = dicionario.TryGetValue(item.CodMaiorAtividadesComum, out int valorAtualDicionario);
+                    if (sucesso)
+                        dicionario[item.CodMaiorAtividadesComum] = valorAtualDicionario + 1;
                 }
             }
 
-            var primeiroUsuario = usuarios.Where(w => w.Codigo == codRepetido.FirstOrDefault()).FirstOrDefault();
-            var segundoUsuario = usuarios.Where(w => w.Codigo == primeiroUsuario.CodMaiorAtividadesComum).FirstOrDefault();
+            var dicionarioOrdenado = dicionario.OrderByDescending(o => o.Value).ToDictionary(o => o.Key);
 
-            var retorno = new List<Usuario>();
-            retorno.Add(primeiroUsuario);
-            retorno.Add(segundoUsuario);
+            var usuariosOrdenados = new List<Usuario>();
+            foreach (var item in dicionarioOrdenado)
+            {
+                var populaUsuario = new Usuario()
+                {
+                    CodMaiorAtividadesComum = item.Key
+                };
+                usuariosOrdenados.Add(populaUsuario);
+            }
 
-            return retorno;
+            var usuarioFinal = new List<Usuario>();
+            foreach (var item in usuariosOrdenados)
+            {
+                var user = usuarios.Where(w => w.Codigo == item.CodMaiorAtividadesComum).FirstOrDefault();
+                usuarioFinal.Add(user);
+            }
+
+            return usuarioFinal.Take(6).ToList();
         }
 
         private static List<Usuario> CalcularDesempenhoDominioConteudo(List<Usuario> usuarios, int opcao)
@@ -303,34 +343,58 @@ namespace IA___Fuzzy
 
         private static List<Usuario> CalcularDesempenhoFaltas(List<Usuario> usuarios, int opcao)
         {
-            List<Usuario> retorno = new List<Usuario>();
+            Dictionary<int, int> dicionario = new Dictionary<int, int>();
 
-            var usuarioOrdenadoPorFalta = usuarios.OrderBy(o => o.QuantidadeFaltas).ToList();
-
-            foreach (var item in usuarioOrdenadoPorFalta)
+            foreach (var item in usuarios)
             {
-                if (retorno.Count < 2)
-                    retorno.Add(item);
-                else if(retorno.Count >= 2)
+                if (!dicionario.ContainsKey(item.QuantidadeFaltas))
+                    dicionario.Add(item.QuantidadeFaltas, 1);
+                else
                 {
-                    if (item.QuantidadeFaltas == retorno[1].QuantidadeFaltas)
-                        retorno.Add(item);
+                    var sucesso = dicionario.TryGetValue(item.QuantidadeFaltas, out int valorAtualDicionario);
+                    if (sucesso)
+                        dicionario[item.QuantidadeFaltas] = valorAtualDicionario + 1;
                 }
-
             }
 
-            return retorno;
+            var dicionarioOrdenado = dicionario.OrderBy(o => o.Value).ToDictionary(o => o.Key);
+
+            var usuariosOrdenados = new List<Usuario>();
+            foreach (var item in dicionarioOrdenado)
+            {
+                var populaUsuario = new Usuario()
+                {
+                    QuantidadeFaltas = item.Key
+                };
+                usuariosOrdenados.Add(populaUsuario);
+            }
+
+            var usuarioFinal = new List<Usuario>();
+            foreach (var item in usuariosOrdenados)
+            {
+                var user = usuarios.Where(w => w.QuantidadeFaltas == item.QuantidadeFaltas).ToList();
+                usuarioFinal.AddRange(user);
+            }
+
+            return usuarioFinal.Take(6).ToList();
         }
 
-        //MAIS 2
+        private static List<Usuario> CalcularDesempenhoInteligencia(List<Usuario> usuarios, int opcao)
+        {
+            return usuarios.Where(w => w.EhInteligente).ToList();
+        }
+
+        private static List<Usuario> CalcularDesempenhoComunicacao(List<Usuario> usuarios, int opcao)
+        {
+            return usuarios.Where(w => w.EhComunicativo).ToList();
+        }
 
 
         private static List<UsuarioPorcentagem> MontaMelhorDupla(List<Usuario> usuariosComMelhoresRelacionamento, List<Usuario> usuariosComMelhoresTempoLivres, List<Usuario> usuariosComMelhoresNotas,
                                                         List<Usuario> usuariosComMelhoresConfianca, List<Usuario> usuariosComMelhoresAtividadesComum, List<Usuario> usuariosComMelhoresDominioConteudo,
-                                                        List<Usuario> usariosComMelhoresDedicacoes, List<Usuario> usuariosComMelhoresFaltas)
+                                                        List<Usuario> usariosComMelhoresDedicacoes, List<Usuario> usuariosComMelhoresFaltas, List<Usuario> usuariosMaisInteligentes,
+                                                        List<Usuario> usuariosMaisComunicativos)
         {
-            //15 regras
-
             Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
 
             List<Usuario> usuariosUnificados = new List<Usuario>();
@@ -342,6 +406,8 @@ namespace IA___Fuzzy
             usuariosUnificados.AddRange(usuariosComMelhoresDominioConteudo);
             usuariosUnificados.AddRange(usariosComMelhoresDedicacoes);
             usuariosUnificados.AddRange(usuariosComMelhoresFaltas);
+            usuariosUnificados.AddRange(usuariosMaisInteligentes);
+            usuariosUnificados.AddRange(usuariosMaisComunicativos);
 
             int valorAtualDicionario;
             foreach (var item in usuariosUnificados)
@@ -487,7 +553,7 @@ namespace IA___Fuzzy
         GerenciaProjetos = 5
     }
 
-    public enum VariavelPeso
+    public enum Qualificações
     {
         Relacionamento = 1,
         TempoLivre = 2,
@@ -497,7 +563,8 @@ namespace IA___Fuzzy
         DominioConteudo = 6,
         Dedicacao = 7,
         Faltas = 8,
-        //mais 2 variaveis
+        Inteligencia = 9,
+        Comunicacao = 10
     }
 
     #endregion
