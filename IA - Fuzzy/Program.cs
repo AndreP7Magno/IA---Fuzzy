@@ -130,7 +130,7 @@ namespace IA___Fuzzy
                 Console.WriteLine("1. " + duplaFinal[0].Usuario.Nome + " com " + duplaFinal[0].Porcentagem + " !");
                 Console.WriteLine("2. " + duplaFinal[1].Usuario.Nome + " com " + duplaFinal[1].Porcentagem + " !");
                 Console.WriteLine("");
-                Console.WriteLine("\tPode integrar também à eles o terceiro melhor perante suas qualificações:");
+                Console.WriteLine("\tPode integrar à eles o terceiro melhor perante suas qualificações:");
                 Console.WriteLine("3. " + duplaFinal[2].Usuario.Nome + " com " + duplaFinal[2].Porcentagem + " !");
                 Console.WriteLine("");
                 Console.WriteLine("Clique para continuar.");
@@ -144,6 +144,7 @@ namespace IA___Fuzzy
         private static List<Usuario> CalcularDesempenhoRelacionamento(List<Usuario> usuarios, int opcao)
         {
             Dictionary<int, int> dicionario = new Dictionary<int, int>();
+            int valorAtualDicionario;
 
             foreach (var item in usuarios)
             {
@@ -151,7 +152,7 @@ namespace IA___Fuzzy
                     dicionario.Add(item.CodMelhorRelacionado, 1);
                 else
                 {
-                    var sucesso = dicionario.TryGetValue(item.CodMelhorRelacionado, out int valorAtualDicionario);
+                    var sucesso = dicionario.TryGetValue(item.CodMelhorRelacionado, out valorAtualDicionario);
                     if (sucesso)
                         dicionario[item.CodMelhorRelacionado] = valorAtualDicionario + 1;
                 }
@@ -182,6 +183,7 @@ namespace IA___Fuzzy
         private static List<Usuario> CalcularDesempenhoTempoLivre(List<Usuario> usuarios, int opcao)
         {
             Dictionary<int, int> dicionario = new Dictionary<int, int>();
+            int valorAtualDicionario;
 
             foreach (var item in usuarios)
             {
@@ -191,7 +193,7 @@ namespace IA___Fuzzy
                         dicionario.Add(item.QuantidadeHorasTempoLivre, 1);
                     else
                     {
-                        var sucesso = dicionario.TryGetValue(item.QuantidadeHorasTempoLivre, out int valorAtualDicionario);
+                        var sucesso = dicionario.TryGetValue(item.QuantidadeHorasTempoLivre, out valorAtualDicionario);
                         if (sucesso)
                             dicionario[item.QuantidadeHorasTempoLivre] = valorAtualDicionario + 1;
                     }
@@ -243,6 +245,7 @@ namespace IA___Fuzzy
         private static List<Usuario> CalcularDesempenhoConfianca(List<Usuario> usuarios, int opcao)
         {
             Dictionary<int, int> dicionario = new Dictionary<int, int>();
+            int valorAtualDicionario;
 
             foreach (var item in usuarios)
             {
@@ -250,7 +253,7 @@ namespace IA___Fuzzy
                     dicionario.Add(item.CodMaiorConfianca, 1);
                 else
                 {
-                    var sucesso = dicionario.TryGetValue(item.CodMaiorConfianca, out int valorAtualDicionario);
+                    var sucesso = dicionario.TryGetValue(item.CodMaiorConfianca, out valorAtualDicionario);
                     if (sucesso)
                         dicionario[item.CodMaiorConfianca] = valorAtualDicionario + 1;
                 }
@@ -281,6 +284,7 @@ namespace IA___Fuzzy
         private static List<Usuario> CalcularDesempenhoAtividadesComum(List<Usuario> usuarios, int opcao)
         {
             Dictionary<int, int> dicionario = new Dictionary<int, int>();
+            int valorAtualDicionario;
 
             foreach (var item in usuarios)
             {
@@ -288,7 +292,7 @@ namespace IA___Fuzzy
                     dicionario.Add(item.CodMaiorAtividadesComum, 1);
                 else
                 {
-                    var sucesso = dicionario.TryGetValue(item.CodMaiorAtividadesComum, out int valorAtualDicionario);
+                    var sucesso = dicionario.TryGetValue(item.CodMaiorAtividadesComum, out valorAtualDicionario);
                     if (sucesso)
                         dicionario[item.CodMaiorAtividadesComum] = valorAtualDicionario + 1;
                 }
@@ -344,6 +348,7 @@ namespace IA___Fuzzy
         private static List<Usuario> CalcularDesempenhoFaltas(List<Usuario> usuarios, int opcao)
         {
             Dictionary<int, int> dicionario = new Dictionary<int, int>();
+            int valorAtualDicionario;
 
             foreach (var item in usuarios)
             {
@@ -351,7 +356,7 @@ namespace IA___Fuzzy
                     dicionario.Add(item.QuantidadeFaltas, 1);
                 else
                 {
-                    var sucesso = dicionario.TryGetValue(item.QuantidadeFaltas, out int valorAtualDicionario);
+                    var sucesso = dicionario.TryGetValue(item.QuantidadeFaltas, out valorAtualDicionario);
                     if (sucesso)
                         dicionario[item.QuantidadeFaltas] = valorAtualDicionario + 1;
                 }
