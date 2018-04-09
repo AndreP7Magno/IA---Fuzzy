@@ -8,9 +8,41 @@ namespace IA___Fuzzy
     public class Program
     {
         static List<Usuario> usuarios = new List<Usuario>();
+        static Usuario usuarioPessoal = new Usuario();
 
         public static void Main(string[] args)
         {
+            var pessoa = new Usuario();
+            var input = 0;
+
+            Console.Write("Por favor, informe o seu nome: ");
+            pessoa.Nome = Console.ReadLine();
+            Console.WriteLine("");
+            Console.WriteLine(pessoa.Nome + ", de 0 a 100, nos informe qual seria a sua melhor proporção em relação à:");
+            Console.WriteLine("");
+            Console.Write("Relacionamento: ");
+            pessoa.ProporcaoRelacionamento = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
+            Console.Write("Tempo Livre: ");
+            pessoa.ProporcaoTempoLivre = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
+            Console.Write("Notas: ");
+            pessoa.ProporcaoNotas = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
+            Console.Write("Confiança: ");
+            pessoa.ProporcaoConfianca = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
+            Console.Write("Atividades em Comum: ");
+            pessoa.ProporcaoAtividadesComum = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
+            Console.Write("Domínio do Conteúdo: ");
+            pessoa.ProporcaoDominioConteudo = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
+            Console.Write("Dedicação: ");
+            pessoa.ProporcaoDedicacao = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
+            Console.Write("Faltas: ");
+            pessoa.ProporcaoFaltas = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
+            Console.Write("Inteligência: ");
+            pessoa.ProporcaoInteligencia = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
+            Console.Write("Comunicação: ");
+            pessoa.ProporcaoComunicacao = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
+
+            usuarioPessoal = QualificaProporcoesPessoal(pessoa);
+
             Console.WriteLine("Aguarde enquanto estamos recolhendo as informações do usuário...");
 
             string file = Properties.Resources.Usuario;
@@ -20,37 +52,90 @@ namespace IA___Fuzzy
             foreach (var item in lines)
             {
                 var divisor = item.Split('|');
-
-                var usuario = new Usuario();
-                usuario.Codigo = int.Parse(divisor[0].Trim());
-                usuario.Nome = divisor[1].Trim();
-                usuario.Idade = int.Parse(divisor[2].Trim());
-                usuario.Sexo = divisor[3].Trim();
-                usuario.CodMelhorRelacionado = int.Parse(divisor[4].Trim());
-                usuario.QuantidadeHorasTempoLivre = int.Parse(divisor[5].Trim());
-                usuario.NotaProgramacao = double.Parse(divisor[6].Trim());
-                usuario.NotaEstruturaDados = double.Parse(divisor[7].Trim());
-                usuario.NotaBancoDados = double.Parse(divisor[8].Trim());
-                usuario.NotaCalculo = double.Parse(divisor[9].Trim());
-                usuario.NotaGerenciaProjetos = double.Parse(divisor[10].Trim());
-                usuario.CodMaiorConfianca = int.Parse(divisor[11].Trim());
-                usuario.CodMaiorAtividadesComum = int.Parse(divisor[12].Trim());
-                usuario.PossuiDominioProgramacao = bool.Parse(divisor[13].Trim());
-                usuario.PossuiDominioEstruturaDados = bool.Parse(divisor[14].Trim());
-                usuario.PossuiDominioBancoDados = bool.Parse(divisor[15].Trim());
-                usuario.PossuiDominioCalculo = bool.Parse(divisor[16].Trim());
-                usuario.PossuiDominioGerenciaProjetos = bool.Parse(divisor[17].Trim());
-                usuario.Dedicado = bool.Parse(divisor[18].Trim());
-                usuario.QuantidadeFaltas = int.Parse(divisor[19].Trim());
-                usuario.EhInteligente = bool.Parse(divisor[20].Trim());
-                usuario.EhComunicativo = bool.Parse(divisor[21].Trim());
-
+                var usuario = new Usuario()
+                {
+                    Codigo = int.Parse(divisor[0].Trim()),
+                    Nome = divisor[1].Trim(),
+                    ProporcaoRelacionamento = int.Parse(divisor[2].Trim()),
+                    ProporcaoTempoLivre = int.Parse(divisor[3].Trim()),
+                    ProporcaoNotas = int.Parse(divisor[4].Trim()),
+                    ProporcaoConfianca = int.Parse(divisor[5].Trim()),
+                    ProporcaoAtividadesComum = int.Parse(divisor[6].Trim()),
+                    ProporcaoDominioConteudo = int.Parse(divisor[7].Trim()),
+                    ProporcaoDedicacao = int.Parse(divisor[8].Trim()),
+                    ProporcaoFaltas = int.Parse(divisor[9].Trim()),
+                    ProporcaoInteligencia = int.Parse(divisor[10].Trim()),
+                    ProporcaoComunicacao = int.Parse(divisor[11].Trim())
+                };
                 usuarios.Add(usuario);
             }
+
+            usuarios = QualificaProporcoes(usuarios);
 
             System.Threading.Thread.Sleep(3000);
 
             MontaMenu();
+        }
+
+        public static Usuario MontaUsuario(Usuario usuario)
+        {
+            usuario.RelacionamentoFraco = usuario.ProporcaoRelacionamento >= 0 && usuario.ProporcaoRelacionamento <= 40;
+            usuario.RelacionamentoMedio = usuario.ProporcaoRelacionamento >= 33 & usuario.ProporcaoRelacionamento <= 70;
+            usuario.RelacionamentoForte = usuario.ProporcaoRelacionamento >= 60 & usuario.ProporcaoRelacionamento <= 100;
+
+            usuario.TempoLivreFraco = usuario.ProporcaoTempoLivre >= 0 && usuario.ProporcaoTempoLivre <= 40;
+            usuario.TempoLivreMedio = usuario.ProporcaoTempoLivre >= 33 & usuario.ProporcaoTempoLivre <= 70;
+            usuario.TempoLivreForte = usuario.ProporcaoTempoLivre >= 60 & usuario.ProporcaoTempoLivre <= 100;
+
+            usuario.NotasFraco = usuario.ProporcaoNotas >= 0 && usuario.ProporcaoNotas <= 40;
+            usuario.NotasMedio = usuario.ProporcaoNotas >= 33 & usuario.ProporcaoNotas <= 70;
+            usuario.NotasForte = usuario.ProporcaoNotas >= 60 & usuario.ProporcaoNotas <= 100;
+
+            usuario.ConfiancaFraco = usuario.ProporcaoConfianca >= 0 && usuario.ProporcaoConfianca <= 40;
+            usuario.ConfiancaMedio = usuario.ProporcaoConfianca >= 33 & usuario.ProporcaoConfianca <= 70;
+            usuario.ConfiancaForte = usuario.ProporcaoConfianca >= 60 & usuario.ProporcaoConfianca <= 100;
+
+            usuario.AtividadesComumFraco = usuario.ProporcaoAtividadesComum >= 0 && usuario.ProporcaoAtividadesComum <= 40;
+            usuario.AtividadesComumMedio = usuario.ProporcaoAtividadesComum >= 33 & usuario.ProporcaoAtividadesComum <= 70;
+            usuario.AtividadesComumForte = usuario.ProporcaoAtividadesComum >= 60 & usuario.ProporcaoAtividadesComum <= 100;
+
+            usuario.DominioConteudoFraco = usuario.ProporcaoDominioConteudo >= 0 && usuario.ProporcaoDominioConteudo <= 40;
+            usuario.DominioConteudoMedio = usuario.ProporcaoDominioConteudo >= 33 & usuario.ProporcaoDominioConteudo <= 70;
+            usuario.DominioConteudoForte = usuario.ProporcaoDominioConteudo >= 60 & usuario.ProporcaoDominioConteudo <= 100;
+
+            usuario.DedicacaoFraco = usuario.ProporcaoDedicacao >= 0 && usuario.ProporcaoDedicacao <= 40;
+            usuario.DedicacaoMedio = usuario.ProporcaoDedicacao >= 33 & usuario.ProporcaoDedicacao <= 70;
+            usuario.DedicacaoForte = usuario.ProporcaoDedicacao >= 60 & usuario.ProporcaoDedicacao <= 100;
+
+            usuario.FaltasFraco = usuario.ProporcaoFaltas >= 0 && usuario.ProporcaoFaltas <= 40;
+            usuario.FaltasMedio = usuario.ProporcaoFaltas >= 33 & usuario.ProporcaoFaltas <= 70;
+            usuario.FaltasForte = usuario.ProporcaoFaltas >= 60 & usuario.ProporcaoFaltas <= 100;
+
+            usuario.InteligenciaFraco = usuario.ProporcaoInteligencia >= 0 && usuario.ProporcaoInteligencia <= 40;
+            usuario.InteligenciaMedio = usuario.ProporcaoInteligencia >= 33 & usuario.ProporcaoInteligencia <= 70;
+            usuario.InteligenciaForte = usuario.ProporcaoInteligencia >= 60 & usuario.ProporcaoInteligencia <= 100;
+
+            usuario.ComunicacaoFraco = usuario.ProporcaoComunicacao >= 0 && usuario.ProporcaoComunicacao <= 40;
+            usuario.ComunicacaoMedio = usuario.ProporcaoComunicacao >= 33 & usuario.ProporcaoComunicacao <= 70;
+            usuario.ComunicacaoForte = usuario.ProporcaoComunicacao >= 60 & usuario.ProporcaoComunicacao <= 100;
+
+            return usuario;
+        }
+
+        public static Usuario QualificaProporcoesPessoal(Usuario usuario)
+        {
+            return MontaUsuario(usuario);
+        }
+
+        public static List<Usuario> QualificaProporcoes(List<Usuario> usuarios)
+        {
+            List<Usuario> retorno = new List<Usuario>();
+            foreach (var usuario in usuarios)
+            {
+                retorno.Add(MontaUsuario(usuario));
+            }
+
+            return retorno;
         }
 
         public static void MontaLogica(string opcao)
@@ -91,8 +176,8 @@ namespace IA___Fuzzy
         
         public static void MontaFuzzy(List<Usuario> usuarios, string opcao)
         {
-            List<Usuario> usuariosComMelhoresRelacionamento = CalcularDesempenhoRelacionamento(usuarios, int.Parse(opcao));
-            List<Usuario> usuariosComMelhoresTempoLivres = CalcularDesempenhoTempoLivre(usuarios, int.Parse(opcao));
+            Dictionary<Usuario, int> usuariosComMelhoresRelacionamento = CalcularDesempenhoRelacionamento(usuarios);
+            Dictionary<Usuario, int> usuariosComMelhoresTempoLivres = CalcularDesempenhoTempoLivre(usuarios);
             List<Usuario> usuariosComMelhoresNotas = CalcularDesempenhoNotas(usuarios, int.Parse(opcao));
             List<Usuario> usuariosComMelhoresConfianca = CalcularDesempenhoConfianca(usuarios, int.Parse(opcao));
             List<Usuario> usuariosComMelhoresAtividadesComum = CalcularDesempenhoAtividadesComum(usuarios, int.Parse(opcao));
@@ -141,318 +226,67 @@ namespace IA___Fuzzy
 
         #region Calculo Desempenho        
 
-        private static List<Usuario> CalcularDesempenhoRelacionamento(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Usuario, int> CalcularDesempenhoRelacionamento(List<Usuario> usuarios)
         {
-            Dictionary<int, int> dicionario = new Dictionary<int, int>();
-            int valorAtualDicionario;
-
             foreach (var item in usuarios)
             {
-                if (!dicionario.ContainsKey(item.CodMelhorRelacionado))
-                    dicionario.Add(item.CodMelhorRelacionado, 1);
-                else
-                {
-                    var sucesso = dicionario.TryGetValue(item.CodMelhorRelacionado, out valorAtualDicionario);
-                    if (sucesso)
-                        dicionario[item.CodMelhorRelacionado] = valorAtualDicionario + 1;
-                }
+
             }
-
-            var dicionarioOrdenado = dicionario.OrderByDescending(o => o.Value).ToDictionary(o => o.Key);
-
-            var usuariosOrdenados = new List<Usuario>();
-            foreach (var item in dicionarioOrdenado)
-            {
-                var populaUsuario = new Usuario()
-                {
-                    CodMelhorRelacionado = item.Key
-                };
-                usuariosOrdenados.Add(populaUsuario);
-            }
-
-            var usuarioFinal = new List<Usuario>();
-            foreach (var item in usuariosOrdenados)
-            {
-                var user = usuarios.Where(w => w.Codigo == item.CodMelhorRelacionado).FirstOrDefault();
-                usuarioFinal.Add(user);
-            }
-
-            return usuarioFinal.Take(6).ToList();
+            throw new NotImplementedException();
         }
 
-        private static List<Usuario> CalcularDesempenhoTempoLivre(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Usuario, int> CalcularDesempenhoTempoLivre(List<Usuario> usuarios)
         {
-            Dictionary<int, int> dicionario = new Dictionary<int, int>();
-            int valorAtualDicionario;
-
-            foreach (var item in usuarios)
-            {
-                if (item.QuantidadeHorasTempoLivre != 0)
-                {
-                    if (!dicionario.ContainsKey(item.QuantidadeHorasTempoLivre))
-                        dicionario.Add(item.QuantidadeHorasTempoLivre, 1);
-                    else
-                    {
-                        var sucesso = dicionario.TryGetValue(item.QuantidadeHorasTempoLivre, out valorAtualDicionario);
-                        if (sucesso)
-                            dicionario[item.QuantidadeHorasTempoLivre] = valorAtualDicionario + 1;
-                    }
-                }
-            }
-
-            var dicionarioOrdenado = dicionario.OrderByDescending(o => o.Value).ToDictionary(o => o.Key);
-
-            var usuariosOrdenados = new List<Usuario>();
-            foreach (var item in dicionarioOrdenado)
-            {
-                var populaUsuario = new Usuario()
-                {
-                    QuantidadeHorasTempoLivre = item.Key
-                };
-                usuariosOrdenados.Add(populaUsuario);
-            }
-
-            var usuarioFinal = new List<Usuario>();
-            foreach (var item in usuariosOrdenados)
-            {
-                var user = usuarios.Where(w => w.QuantidadeHorasTempoLivre == item.QuantidadeHorasTempoLivre).ToList();
-                usuarioFinal.AddRange(user);
-            }
-
-            return usuarioFinal.Take(6).ToList();
-
+            throw new NotImplementedException();
         }
 
         private static List<Usuario> CalcularDesempenhoNotas(List<Usuario> usuarios, int opcao)
         {
-
-            List<Usuario> retorno = new List<Usuario>();
-
-            if ((Disciplina)opcao == Disciplina.Programacao)
-                retorno = usuarios.OrderByDescending(o => o.NotaProgramacao).Take(6).ToList();
-            else if ((Disciplina)opcao == Disciplina.EstruturaDados)
-                retorno = usuarios.OrderByDescending(o => o.NotaEstruturaDados).Take(6).ToList();
-            else if ((Disciplina)opcao == Disciplina.BancoDados)
-                retorno = usuarios.OrderByDescending(o => o.NotaBancoDados).Take(6).ToList();
-            else if ((Disciplina)opcao == Disciplina.Calculo)
-                retorno = usuarios.OrderByDescending(o => o.NotaCalculo).Take(6).ToList();
-            else if ((Disciplina)opcao == Disciplina.GerenciaProjetos)
-                retorno = usuarios.OrderByDescending(o => o.NotaGerenciaProjetos).Take(6).ToList();
-
-            return retorno;
+            throw new NotImplementedException();
         }
 
         private static List<Usuario> CalcularDesempenhoConfianca(List<Usuario> usuarios, int opcao)
         {
-            Dictionary<int, int> dicionario = new Dictionary<int, int>();
-            int valorAtualDicionario;
-
-            foreach (var item in usuarios)
-            {
-                if (!dicionario.ContainsKey(item.CodMaiorConfianca))
-                    dicionario.Add(item.CodMaiorConfianca, 1);
-                else
-                {
-                    var sucesso = dicionario.TryGetValue(item.CodMaiorConfianca, out valorAtualDicionario);
-                    if (sucesso)
-                        dicionario[item.CodMaiorConfianca] = valorAtualDicionario + 1;
-                }
-            }
-
-            var dicionarioOrdenado = dicionario.OrderByDescending(o => o.Value).ToDictionary(o => o.Key);
-
-            var usuariosOrdenados = new List<Usuario>();
-            foreach (var item in dicionarioOrdenado)
-            {
-                var populaUsuario = new Usuario()
-                {
-                    CodMaiorConfianca = item.Key
-                };
-                usuariosOrdenados.Add(populaUsuario);
-            }
-
-            var usuarioFinal = new List<Usuario>();
-            foreach (var item in usuariosOrdenados)
-            {
-                var user = usuarios.Where(w => w.Codigo == item.CodMaiorConfianca).FirstOrDefault();
-                usuarioFinal.Add(user);
-            }
-
-            return usuarioFinal.Take(6).ToList();
+            throw new NotImplementedException();
         }
 
         private static List<Usuario> CalcularDesempenhoAtividadesComum(List<Usuario> usuarios, int opcao)
         {
-            Dictionary<int, int> dicionario = new Dictionary<int, int>();
-            int valorAtualDicionario;
-
-            foreach (var item in usuarios)
-            {
-                if (!dicionario.ContainsKey(item.CodMaiorAtividadesComum))
-                    dicionario.Add(item.CodMaiorAtividadesComum, 1);
-                else
-                {
-                    var sucesso = dicionario.TryGetValue(item.CodMaiorAtividadesComum, out valorAtualDicionario);
-                    if (sucesso)
-                        dicionario[item.CodMaiorAtividadesComum] = valorAtualDicionario + 1;
-                }
-            }
-
-            var dicionarioOrdenado = dicionario.OrderByDescending(o => o.Value).ToDictionary(o => o.Key);
-
-            var usuariosOrdenados = new List<Usuario>();
-            foreach (var item in dicionarioOrdenado)
-            {
-                var populaUsuario = new Usuario()
-                {
-                    CodMaiorAtividadesComum = item.Key
-                };
-                usuariosOrdenados.Add(populaUsuario);
-            }
-
-            var usuarioFinal = new List<Usuario>();
-            foreach (var item in usuariosOrdenados)
-            {
-                var user = usuarios.Where(w => w.Codigo == item.CodMaiorAtividadesComum).FirstOrDefault();
-                usuarioFinal.Add(user);
-            }
-
-            return usuarioFinal.Take(6).ToList();
+            throw new NotImplementedException();
         }
 
         private static List<Usuario> CalcularDesempenhoDominioConteudo(List<Usuario> usuarios, int opcao)
         {
-            List<Usuario> user = new List<Usuario>();
-
-            if ((Disciplina)opcao == Disciplina.Programacao)
-                user = usuarios.Where(w => w.PossuiDominioProgramacao).ToList();
-            else if ((Disciplina)opcao == Disciplina.EstruturaDados)
-                user = usuarios.Where(w => w.PossuiDominioEstruturaDados).ToList();
-            else if ((Disciplina)opcao == Disciplina.BancoDados)
-                user = usuarios.Where(w => w.PossuiDominioBancoDados).ToList();
-            else if ((Disciplina)opcao == Disciplina.Calculo)
-                user = usuarios.Where(w => w.PossuiDominioCalculo).ToList();
-            else if ((Disciplina)opcao == Disciplina.GerenciaProjetos)
-                user = usuarios.Where(w => w.PossuiDominioGerenciaProjetos).ToList();
-
-            var retorno = CalcularDesempenhoNotas(user, opcao);
-
-            return retorno;
+            throw new NotImplementedException();
         }
 
         private static List<Usuario> CalcularDesempenhoDedicacao(List<Usuario> usuarios, int opcao)
         {
-            return usuarios.Where(w => w.Dedicado).ToList();
+            throw new NotImplementedException();
         }
 
         private static List<Usuario> CalcularDesempenhoFaltas(List<Usuario> usuarios, int opcao)
         {
-            Dictionary<int, int> dicionario = new Dictionary<int, int>();
-            int valorAtualDicionario;
-
-            foreach (var item in usuarios)
-            {
-                if (!dicionario.ContainsKey(item.QuantidadeFaltas))
-                    dicionario.Add(item.QuantidadeFaltas, 1);
-                else
-                {
-                    var sucesso = dicionario.TryGetValue(item.QuantidadeFaltas, out valorAtualDicionario);
-                    if (sucesso)
-                        dicionario[item.QuantidadeFaltas] = valorAtualDicionario + 1;
-                }
-            }
-
-            var dicionarioOrdenado = dicionario.OrderBy(o => o.Value).ToDictionary(o => o.Key);
-
-            var usuariosOrdenados = new List<Usuario>();
-            foreach (var item in dicionarioOrdenado)
-            {
-                var populaUsuario = new Usuario()
-                {
-                    QuantidadeFaltas = item.Key
-                };
-                usuariosOrdenados.Add(populaUsuario);
-            }
-
-            var usuarioFinal = new List<Usuario>();
-            foreach (var item in usuariosOrdenados)
-            {
-                var user = usuarios.Where(w => w.QuantidadeFaltas == item.QuantidadeFaltas).ToList();
-                usuarioFinal.AddRange(user);
-            }
-
-            return usuarioFinal.Take(6).ToList();
+            throw new NotImplementedException();
         }
 
         private static List<Usuario> CalcularDesempenhoInteligencia(List<Usuario> usuarios, int opcao)
         {
-            return usuarios.Where(w => w.EhInteligente).ToList();
+            throw new NotImplementedException();
         }
 
         private static List<Usuario> CalcularDesempenhoComunicacao(List<Usuario> usuarios, int opcao)
         {
-            return usuarios.Where(w => w.EhComunicativo).ToList();
+            throw new NotImplementedException();
         }
 
 
-        private static List<UsuarioPorcentagem> MontaMelhorDupla(List<Usuario> usuariosComMelhoresRelacionamento, List<Usuario> usuariosComMelhoresTempoLivres, List<Usuario> usuariosComMelhoresNotas,
+        private static List<UsuarioPorcentagem> MontaMelhorDupla(Dictionary<Usuario, int> usuariosComMelhoresRelacionamento, Dictionary<Usuario, int> usuariosComMelhoresTempoLivres, List<Usuario> usuariosComMelhoresNotas,
                                                         List<Usuario> usuariosComMelhoresConfianca, List<Usuario> usuariosComMelhoresAtividadesComum, List<Usuario> usuariosComMelhoresDominioConteudo,
                                                         List<Usuario> usariosComMelhoresDedicacoes, List<Usuario> usuariosComMelhoresFaltas, List<Usuario> usuariosMaisInteligentes,
                                                         List<Usuario> usuariosMaisComunicativos)
         {
-            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
-
-            List<Usuario> usuariosUnificados = new List<Usuario>();
-            usuariosUnificados.AddRange(usuariosComMelhoresRelacionamento);
-            usuariosUnificados.AddRange(usuariosComMelhoresTempoLivres);
-            usuariosUnificados.AddRange(usuariosComMelhoresNotas);
-            usuariosUnificados.AddRange(usuariosComMelhoresConfianca);
-            usuariosUnificados.AddRange(usuariosComMelhoresAtividadesComum);
-            usuariosUnificados.AddRange(usuariosComMelhoresDominioConteudo);
-            usuariosUnificados.AddRange(usariosComMelhoresDedicacoes);
-            usuariosUnificados.AddRange(usuariosComMelhoresFaltas);
-            usuariosUnificados.AddRange(usuariosMaisInteligentes);
-            usuariosUnificados.AddRange(usuariosMaisComunicativos);
-
-            int valorAtualDicionario;
-            foreach (var item in usuariosUnificados)
-            {
-                if (!dicionario.ContainsKey(item))
-                    dicionario.Add(item, 1);
-                else
-                {
-                    var sucesso = dicionario.TryGetValue(item, out valorAtualDicionario);
-                    if (sucesso)
-                        dicionario[item] = valorAtualDicionario + 1;
-                }
-            }
-
-            var dicionarioOrdenado = dicionario.OrderByDescending(o => o.Value).ToDictionary(o => o.Key);
-
-            var usuariosPorcentagem = new List<UsuarioPorcentagem>();
-            foreach (var item in dicionarioOrdenado)
-            {
-                var populaUsuarioPorcentagem = new UsuarioPorcentagem()
-                {
-                    Usuario = item.Key,
-                    Porcentagem = item.Value.Value.ToString() + "0%"
-                };
-                usuariosPorcentagem.Add(populaUsuarioPorcentagem);
-            }
-
-            List<UsuarioPorcentagem> retorno = new List<UsuarioPorcentagem>();
-            foreach (var item in usuariosPorcentagem)
-            {
-                if (retorno.Count < 2)
-                    retorno.Add(item);
-                else if (retorno.Count >= 2)
-                {
-                    if (item.Porcentagem.Equals(retorno[1].Porcentagem))
-                        retorno.Add(item);
-                }
-            }
-
-            return retorno;
+            throw new NotImplementedException();
         }
 
         #endregion

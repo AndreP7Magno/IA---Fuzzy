@@ -4,25 +4,55 @@
     {
         public int Codigo { get; set; }
         public string Nome { get; set; }
-        public int Idade { get; set; }
-        public string Sexo { get; set; }
-        public int CodMelhorRelacionado { get; set; }
-        public int QuantidadeHorasTempoLivre { get; set; }
-        public double NotaProgramacao { get; set; }
-        public double NotaEstruturaDados { get; set; }
-        public double NotaBancoDados { get; set; }
-        public double NotaCalculo { get; set; }
-        public double NotaGerenciaProjetos { get; set; }
-        public int CodMaiorConfianca { get; set; }
-        public int CodMaiorAtividadesComum { get; set; }
-        public bool PossuiDominioProgramacao { get; set; }
-        public bool PossuiDominioEstruturaDados { get; set; }
-        public bool PossuiDominioBancoDados { get; set; }
-        public bool PossuiDominioCalculo { get; set; }
-        public bool PossuiDominioGerenciaProjetos { get; set; }
-        public bool Dedicado { get; set; }
-        public int QuantidadeFaltas { get; set; }
-        public bool EhInteligente { get; set; }
-        public bool EhComunicativo { get; set; }
+        public int? ProporcaoRelacionamento { get; set; }
+        public int? ProporcaoTempoLivre { get; set; }
+        public int? ProporcaoNotas { get; set; }
+        public int? ProporcaoConfianca { get; set; }
+        public int? ProporcaoAtividadesComum { get; set; }
+        public int? ProporcaoDominioConteudo { get; set; }
+        public int? ProporcaoDedicacao { get; set; }
+        public int? ProporcaoFaltas { get; set; }
+        public int? ProporcaoInteligencia { get; set; }
+        public int? ProporcaoComunicacao { get; set; }
+
+        public bool RelacionamentoFraco { get; set; }
+        public bool RelacionamentoMedio { get; set; }
+        public bool RelacionamentoForte { get; set; }
+
+        public bool TempoLivreFraco { get; set; }
+        public bool TempoLivreMedio { get; set; }
+        public bool TempoLivreForte { get; set; }
+
+        public bool NotasFraco { get; set; }
+        public bool NotasMedio { get; set; }
+        public bool NotasForte { get; set; }
+
+        public bool ConfiancaFraco { get; set; }
+        public bool ConfiancaMedio { get; set; }
+        public bool ConfiancaForte { get; set; }
+
+        public bool AtividadesComumFraco { get; set; }
+        public bool AtividadesComumMedio { get; set; }
+        public bool AtividadesComumForte { get; set; }
+
+        public bool DominioConteudoFraco { get; set; }
+        public bool DominioConteudoMedio { get; set; }
+        public bool DominioConteudoForte { get; set; }
+
+        public bool DedicacaoFraco { get; set; }
+        public bool DedicacaoMedio { get; set; }
+        public bool DedicacaoForte { get; set; }
+
+        public bool FaltasFraco { get; set; }
+        public bool FaltasMedio { get; set; }
+        public bool FaltasForte { get; set; }
+
+        public bool InteligenciaFraco { get; set; }
+        public bool InteligenciaMedio { get; set; }
+        public bool InteligenciaForte { get; set; }
+
+        public bool ComunicacaoFraco { get; set; }
+        public bool ComunicacaoMedio { get; set; }
+        public bool ComunicacaoForte { get; set; }
     }
 }
