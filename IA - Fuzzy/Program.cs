@@ -43,7 +43,8 @@ namespace IA___Fuzzy
 
             usuarioPessoal = QualificaProporcoesPessoal(pessoa);
 
-            Console.WriteLine("Aguarde enquanto estamos recolhendo as informações do usuário...");
+            Console.Clear();
+            Console.WriteLine(usuarioPessoal.Nome + ", aguarde enquanto estamos recolhendo as informações dos usuários restantes...");
 
             string file = Properties.Resources.Usuario;
             var lines = file.Split(new[] { Environment.NewLine },
@@ -173,118 +174,204 @@ namespace IA___Fuzzy
                     break;
             }
         }
-        
+
         public static void MontaFuzzy(List<Usuario> usuarios, string opcao)
         {
-            Dictionary<Usuario, int> usuariosComMelhoresRelacionamento = CalcularDesempenhoRelacionamento(usuarios);
-            Dictionary<Usuario, int> usuariosComMelhoresTempoLivres = CalcularDesempenhoTempoLivre(usuarios);
-            List<Usuario> usuariosComMelhoresNotas = CalcularDesempenhoNotas(usuarios, int.Parse(opcao));
-            List<Usuario> usuariosComMelhoresConfianca = CalcularDesempenhoConfianca(usuarios, int.Parse(opcao));
-            List<Usuario> usuariosComMelhoresAtividadesComum = CalcularDesempenhoAtividadesComum(usuarios, int.Parse(opcao));
-            List<Usuario> usuariosComMelhoresDominioConteudo = CalcularDesempenhoDominioConteudo(usuarios, int.Parse(opcao));
-            List<Usuario> usariosComMelhoresDedicacoes = CalcularDesempenhoDedicacao(usuarios, int.Parse(opcao));
-            List<Usuario> usuariosComMelhoresFaltas = CalcularDesempenhoFaltas(usuarios, int.Parse(opcao));
-            List<Usuario> usuariosMaisInteligentes = CalcularDesempenhoInteligencia(usuarios, int.Parse(opcao));
-            List<Usuario> usuariosMaisComunicativos = CalcularDesempenhoComunicacao(usuarios, int.Parse(opcao));
+            Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresRelacionamento = CalcularDesempenhoRelacionamento(usuarios);
+            Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresTempoLivres = CalcularDesempenhoTempoLivre(usuarios);
+            Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresNotas = CalcularDesempenhoNotas(usuarios, int.Parse(opcao));
+            Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresConfianca = CalcularDesempenhoConfianca(usuarios, int.Parse(opcao));
+            Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresAtividadesComum = CalcularDesempenhoAtividadesComum(usuarios, int.Parse(opcao));
+            Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresDominioConteudo = CalcularDesempenhoDominioConteudo(usuarios, int.Parse(opcao));
+            Dictionary<Tuple<Usuario, Usuario>, int> usariosComMelhoresDedicacoes = CalcularDesempenhoDedicacao(usuarios, int.Parse(opcao));
+            Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresFaltas = CalcularDesempenhoFaltas(usuarios, int.Parse(opcao));
+            Dictionary<Tuple<Usuario, Usuario>, int> usuariosMaisInteligentes = CalcularDesempenhoInteligencia(usuarios, int.Parse(opcao));
+            Dictionary<Tuple<Usuario, Usuario>, int> usuariosMaisComunicativos = CalcularDesempenhoComunicacao(usuarios, int.Parse(opcao));
 
-            List<UsuarioPorcentagem> duplaFinal = MontaMelhorDupla(usuariosComMelhoresRelacionamento, usuariosComMelhoresTempoLivres, usuariosComMelhoresNotas, usuariosComMelhoresConfianca,
+            Dictionary<Tuple<Usuario, Usuario>, int> duplaFinal = MontaMelhorDupla(usuariosComMelhoresRelacionamento, usuariosComMelhoresTempoLivres, usuariosComMelhoresNotas, usuariosComMelhoresConfianca,
                                                             usuariosComMelhoresAtividadesComum, usuariosComMelhoresDominioConteudo, usariosComMelhoresDedicacoes, usuariosComMelhoresFaltas,
                                                             usuariosMaisInteligentes, usuariosMaisComunicativos);
 
-            if (duplaFinal.Count == 2) {
-                var nome1 = duplaFinal.First().Usuario.Nome;
-                var nome2 = duplaFinal.Last().Usuario.Nome;
+          
+                var nome1 = duplaFinal.First().Key.Item1.Nome;
+                var nome2 = duplaFinal.Last().Key.Item2.Nome;
 
                 Console.Clear();
                 Console.WriteLine("");
-                Console.WriteLine("\tMelhor dupla formada junto com suas porcentagens de qualificações:");
+                Console.WriteLine("\tMelhor dupla formada:");
                 Console.WriteLine("");
-                Console.WriteLine("1. " + nome1 + " com " + duplaFinal.First().Porcentagem + " !");
-                Console.WriteLine("2. " + nome2 + " com " + duplaFinal.Last().Porcentagem + " !");
-                Console.WriteLine("");
-                Console.WriteLine("Clique para continuar.");
-                Console.ReadKey();
-                MontaMenuFinal();
-            }
-            else
-            {
-                Console.Clear();
-                Console.WriteLine("");
-                Console.WriteLine("\tMelhor dupla formada junto com suas porcentagens de qualificações:");
-                Console.WriteLine("");
-                Console.WriteLine("1. " + duplaFinal[0].Usuario.Nome + " com " + duplaFinal[0].Porcentagem + " !");
-                Console.WriteLine("2. " + duplaFinal[1].Usuario.Nome + " com " + duplaFinal[1].Porcentagem + " !");
-                Console.WriteLine("");
-                Console.WriteLine("\tPode integrar à eles o terceiro melhor perante suas qualificações:");
-                Console.WriteLine("3. " + duplaFinal[2].Usuario.Nome + " com " + duplaFinal[2].Porcentagem + " !");
+                Console.WriteLine("1. " + nome1 + "!");
+                Console.WriteLine("2. " + nome2 + "!");
                 Console.WriteLine("");
                 Console.WriteLine("Clique para continuar.");
                 Console.ReadKey();
                 MontaMenuFinal();
-            }
+            
         }
 
         #region Calculo Desempenho        
 
-        private static Dictionary<Usuario, int> CalcularDesempenhoRelacionamento(List<Usuario> usuarios)
+        private static Dictionary<Tuple<Usuario, Usuario>, int> CalcularDesempenhoRelacionamento(List<Usuario> usuarios)
         {
+            Dictionary<Tuple<Usuario, Usuario>, int> dicionario = new Dictionary<Tuple<Usuario, Usuario>, int>();
+            int valorAtual;
+
             foreach (var item in usuarios)
             {
+                if (usuarioPessoal.RelacionamentoFraco && item.RelacionamentoFraco)
+                {
+                    if (!dicionario.ContainsKey(new Tuple<Usuario, Usuario>(usuarioPessoal, item)))
+                        dicionario.Add(new Tuple<Usuario, Usuario>(usuarioPessoal, item), 0);
+                    else
+                    {
+                        if (dicionario.TryGetValue(new Tuple<Usuario, Usuario>(usuarioPessoal, item), out valorAtual))
+                            dicionario[new Tuple<Usuario, Usuario>(usuarioPessoal, item)] = valorAtual + 0;
+                    }
+                }
 
+                if (usuarioPessoal.RelacionamentoFraco && item.RelacionamentoMedio)
+                {
+                    if (!dicionario.ContainsKey(new Tuple<Usuario, Usuario>(usuarioPessoal, item)))
+                        dicionario.Add(new Tuple<Usuario, Usuario>(usuarioPessoal, item), 15);
+                    else
+                    {
+                        if (dicionario.TryGetValue(new Tuple<Usuario, Usuario>(usuarioPessoal, item), out valorAtual))
+                            dicionario[new Tuple<Usuario, Usuario>(usuarioPessoal, item)] = valorAtual + 15;
+                    }
+                }
+
+                if (usuarioPessoal.RelacionamentoFraco && item.RelacionamentoForte)
+                {
+                    if (!dicionario.ContainsKey(new Tuple<Usuario, Usuario>(usuarioPessoal, item)))
+                        dicionario.Add(new Tuple<Usuario, Usuario>(usuarioPessoal, item), 30);
+                    else
+                    {
+                        if (dicionario.TryGetValue(new Tuple<Usuario, Usuario>(usuarioPessoal, item), out valorAtual))
+                            dicionario[new Tuple<Usuario, Usuario>(usuarioPessoal, item)] = valorAtual + 30;
+                    }
+                }
+
+                if (usuarioPessoal.RelacionamentoMedio && item.RelacionamentoFraco)
+                {
+                    if (!dicionario.ContainsKey(new Tuple<Usuario, Usuario>(usuarioPessoal, item)))
+                        dicionario.Add(new Tuple<Usuario, Usuario>(usuarioPessoal, item), 15);
+                    else
+                    {
+                        if (dicionario.TryGetValue(new Tuple<Usuario, Usuario>(usuarioPessoal, item), out valorAtual))
+                            dicionario[new Tuple<Usuario, Usuario>(usuarioPessoal, item)] = valorAtual + 15;
+                    }
+                }
+
+                if (usuarioPessoal.RelacionamentoMedio && item.RelacionamentoMedio)
+                {
+                    if (!dicionario.ContainsKey(new Tuple<Usuario, Usuario>(usuarioPessoal, item)))
+                        dicionario.Add(new Tuple<Usuario, Usuario>(usuarioPessoal, item), 50);
+                    else
+                    {
+                        if (dicionario.TryGetValue(new Tuple<Usuario, Usuario>(usuarioPessoal, item), out valorAtual))
+                            dicionario[new Tuple<Usuario, Usuario>(usuarioPessoal, item)] = valorAtual + 50;
+                    }
+                }
+
+                if (usuarioPessoal.RelacionamentoMedio && item.RelacionamentoForte)
+                {
+                    if (!dicionario.ContainsKey(new Tuple<Usuario, Usuario>(usuarioPessoal, item)))
+                        dicionario.Add(new Tuple<Usuario, Usuario>(usuarioPessoal, item), 75);
+                    else
+                    {
+                        if (dicionario.TryGetValue(new Tuple<Usuario, Usuario>(usuarioPessoal, item), out valorAtual))
+                            dicionario[new Tuple<Usuario, Usuario>(usuarioPessoal, item)] = valorAtual + 75;
+                    }
+                }
+
+                if (usuarioPessoal.RelacionamentoForte && item.RelacionamentoFraco)
+                {
+                    if (!dicionario.ContainsKey(new Tuple<Usuario, Usuario>(usuarioPessoal, item)))
+                        dicionario.Add(new Tuple<Usuario, Usuario>(usuarioPessoal, item), 30);
+                    else
+                    {
+                        if (dicionario.TryGetValue(new Tuple<Usuario, Usuario>(usuarioPessoal, item), out valorAtual))
+                            dicionario[new Tuple<Usuario, Usuario>(usuarioPessoal, item)] = valorAtual + 30;
+                    }
+                }
+
+                if (usuarioPessoal.RelacionamentoForte && item.RelacionamentoMedio)
+                {
+                    if (!dicionario.ContainsKey(new Tuple<Usuario, Usuario>(usuarioPessoal, item)))
+                        dicionario.Add(new Tuple<Usuario, Usuario>(usuarioPessoal, item), 75);
+                    else
+                    {
+                        if (dicionario.TryGetValue(new Tuple<Usuario, Usuario>(usuarioPessoal, item), out valorAtual))
+                            dicionario[new Tuple<Usuario, Usuario>(usuarioPessoal, item)] = valorAtual + 75;
+                    }
+                }
+
+                if (usuarioPessoal.RelacionamentoForte && item.RelacionamentoForte)
+                {
+                    if (!dicionario.ContainsKey(new Tuple<Usuario, Usuario>(usuarioPessoal, item)))
+                        dicionario.Add(new Tuple<Usuario, Usuario>(usuarioPessoal, item), 100);
+                    else
+                    {
+                        if (dicionario.TryGetValue(new Tuple<Usuario, Usuario>(usuarioPessoal, item), out valorAtual))
+                            dicionario[new Tuple<Usuario, Usuario>(usuarioPessoal, item)] = valorAtual + 100;
+                    }
+                }
             }
-            throw new NotImplementedException();
+
+            return dicionario;
         }
 
-        private static Dictionary<Usuario, int> CalcularDesempenhoTempoLivre(List<Usuario> usuarios)
+        private static Dictionary<Tuple<Usuario, Usuario>, int> CalcularDesempenhoTempoLivre(List<Usuario> usuarios)
         {
             throw new NotImplementedException();
         }
 
-        private static List<Usuario> CalcularDesempenhoNotas(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Tuple<Usuario, Usuario>, int> CalcularDesempenhoNotas(List<Usuario> usuarios, int opcao)
         {
             throw new NotImplementedException();
         }
 
-        private static List<Usuario> CalcularDesempenhoConfianca(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Tuple<Usuario, Usuario>, int> CalcularDesempenhoConfianca(List<Usuario> usuarios, int opcao)
         {
             throw new NotImplementedException();
         }
 
-        private static List<Usuario> CalcularDesempenhoAtividadesComum(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Tuple<Usuario, Usuario>, int> CalcularDesempenhoAtividadesComum(List<Usuario> usuarios, int opcao)
         {
             throw new NotImplementedException();
         }
 
-        private static List<Usuario> CalcularDesempenhoDominioConteudo(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Tuple<Usuario, Usuario>, int> CalcularDesempenhoDominioConteudo(List<Usuario> usuarios, int opcao)
         {
             throw new NotImplementedException();
         }
 
-        private static List<Usuario> CalcularDesempenhoDedicacao(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Tuple<Usuario, Usuario>, int> CalcularDesempenhoDedicacao(List<Usuario> usuarios, int opcao)
         {
             throw new NotImplementedException();
         }
 
-        private static List<Usuario> CalcularDesempenhoFaltas(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Tuple<Usuario, Usuario>, int> CalcularDesempenhoFaltas(List<Usuario> usuarios, int opcao)
         {
             throw new NotImplementedException();
         }
 
-        private static List<Usuario> CalcularDesempenhoInteligencia(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Tuple<Usuario, Usuario>, int> CalcularDesempenhoInteligencia(List<Usuario> usuarios, int opcao)
         {
             throw new NotImplementedException();
         }
 
-        private static List<Usuario> CalcularDesempenhoComunicacao(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Tuple<Usuario, Usuario>, int> CalcularDesempenhoComunicacao(List<Usuario> usuarios, int opcao)
         {
             throw new NotImplementedException();
         }
 
 
-        private static List<UsuarioPorcentagem> MontaMelhorDupla(Dictionary<Usuario, int> usuariosComMelhoresRelacionamento, Dictionary<Usuario, int> usuariosComMelhoresTempoLivres, List<Usuario> usuariosComMelhoresNotas,
-                                                        List<Usuario> usuariosComMelhoresConfianca, List<Usuario> usuariosComMelhoresAtividadesComum, List<Usuario> usuariosComMelhoresDominioConteudo,
-                                                        List<Usuario> usariosComMelhoresDedicacoes, List<Usuario> usuariosComMelhoresFaltas, List<Usuario> usuariosMaisInteligentes,
-                                                        List<Usuario> usuariosMaisComunicativos)
+        private static Dictionary<Tuple<Usuario, Usuario>, int> MontaMelhorDupla(Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresRelacionamento, Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresTempoLivres,
+                                                        Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresNotas, Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresConfianca, 
+                                                        Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresAtividadesComum, Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresDominioConteudo,
+                                                        Dictionary<Tuple<Usuario, Usuario>, int> usariosComMelhoresDedicacoes, Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresFaltas,
+                                                        Dictionary<Tuple<Usuario, Usuario>, int> usuariosMaisInteligentes, Dictionary<Tuple<Usuario, Usuario>, int> usuariosMaisComunicativos)
         {
             throw new NotImplementedException();
         }
