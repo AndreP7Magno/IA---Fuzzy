@@ -44,12 +44,13 @@ namespace IA___Fuzzy
             usuarioPessoal = QualificaProporcoesPessoal(pessoa);
 
             Console.Clear();
-            Console.WriteLine(usuarioPessoal.Nome + ", aguarde enquanto estamos recolhendo as informações dos usuários restantes...");
+            Console.WriteLine(usuarioPessoal.Nome + ", aguarde enquanto estamos recolhendo as informações dos usuários...");
 
             string file = Properties.Resources.Usuario;
             var lines = file.Split(new[] { Environment.NewLine },
                                             StringSplitOptions.RemoveEmptyEntries).ToList();
 
+            usuarios = new List<Usuario>();
             foreach (var item in lines)
             {
                 var divisor = item.Split('|');
@@ -70,12 +71,12 @@ namespace IA___Fuzzy
                 };
                 usuarios.Add(usuario);
             }
-
+            
             usuarios = QualificaProporcoes(usuarios);
 
             System.Threading.Thread.Sleep(3000);
 
-            MontaMenu();
+            MontaFuzzy(usuarios);
         }
 
         public static Usuario MontaUsuario(Usuario usuario)
@@ -139,7 +140,7 @@ namespace IA___Fuzzy
             return retorno;
         }
 
-        public static void MontaLogica(string opcao)
+        /*public static void MontaLogica(string opcao)
         {
             Console.Clear();
             Console.WriteLine("Verificando opção fornecida...");
@@ -173,40 +174,56 @@ namespace IA___Fuzzy
                     MontaMenuErro();
                     break;
             }
-        }
+        }*/
 
-        public static void MontaFuzzy(List<Usuario> usuarios, string opcao)
+        public static void MontaFuzzy(List<Usuario> usuarios)
         {
+            System.Threading.Thread.Sleep(1000);
+
             Dictionary<Usuario, int> usuariosComMelhoresRelacionamento = CalcularDesempenhoRelacionamento(usuarios);
             Dictionary<Usuario, int> usuariosComMelhoresTempoLivres = CalcularDesempenhoTempoLivre(usuarios);
-            Dictionary<Usuario, int> usuariosComMelhoresNotas = CalcularDesempenhoNotas(usuarios, int.Parse(opcao));
-            Dictionary<Usuario, int> usuariosComMelhoresConfianca = CalcularDesempenhoConfianca(usuarios, int.Parse(opcao));
-            Dictionary<Usuario, int> usuariosComMelhoresAtividadesComum = CalcularDesempenhoAtividadesComum(usuarios, int.Parse(opcao));
-            Dictionary<Usuario, int> usuariosComMelhoresDominioConteudo = CalcularDesempenhoDominioConteudo(usuarios, int.Parse(opcao));
-            Dictionary<Usuario, int> usariosComMelhoresDedicacoes = CalcularDesempenhoDedicacao(usuarios, int.Parse(opcao));
-            Dictionary<Usuario, int> usuariosComMelhoresFaltas = CalcularDesempenhoFaltas(usuarios, int.Parse(opcao));
-            Dictionary<Usuario, int> usuariosMaisInteligentes = CalcularDesempenhoInteligencia(usuarios, int.Parse(opcao));
-            Dictionary<Usuario, int> usuariosMaisComunicativos = CalcularDesempenhoComunicacao(usuarios, int.Parse(opcao));
+            Dictionary<Usuario, int> usuariosComMelhoresNotas = CalcularDesempenhoNotas(usuarios);
+            Dictionary<Usuario, int> usuariosComMelhoresConfianca = CalcularDesempenhoConfianca(usuarios);
+            Dictionary<Usuario, int> usuariosComMelhoresAtividadesComum = CalcularDesempenhoAtividadesComum(usuarios);
+            Dictionary<Usuario, int> usuariosComMelhoresDominioConteudo = CalcularDesempenhoDominioConteudo(usuarios);
+            Dictionary<Usuario, int> usariosComMelhoresDedicacoes = CalcularDesempenhoDedicacao(usuarios);
+            Dictionary<Usuario, int> usuariosComMelhoresFaltas = CalcularDesempenhoFaltas(usuarios);
+            Dictionary<Usuario, int> usuariosMaisInteligentes = CalcularDesempenhoInteligencia(usuarios);
+            Dictionary<Usuario, int> usuariosMaisComunicativos = CalcularDesempenhoComunicacao(usuarios);
 
             Dictionary<Usuario, KeyValuePair<Usuario, int>> duplaFinal = MontaMelhorDupla(usuariosComMelhoresRelacionamento, usuariosComMelhoresTempoLivres, usuariosComMelhoresNotas, usuariosComMelhoresConfianca,
                                                             usuariosComMelhoresAtividadesComum, usuariosComMelhoresDominioConteudo, usariosComMelhoresDedicacoes, usuariosComMelhoresFaltas,
                                                             usuariosMaisInteligentes, usuariosMaisComunicativos);
 
-          
-                var nome1 = usuarioPessoal.Nome;
-                var nome2 = duplaFinal.First().Key.Nome;
 
-                Console.Clear();
+            var maiorPontuacao = duplaFinal.First().Value.Value;
+            var melhoresUsuarios = duplaFinal.Where(w => w.Value.Value == maiorPontuacao).ToList();
+
+            var nome1 = usuarioPessoal.Nome;
+            var nome2 = duplaFinal.First().Key.Nome;
+
+            Console.Clear();
+            Console.WriteLine("");
+            Console.WriteLine("\tMelhor dupla formada:");
+            Console.WriteLine("");
+            Console.WriteLine("1. " + nome1 + "!");
+            Console.WriteLine("2. " + nome2 + "!");
+            Console.WriteLine("");
+            if (melhoresUsuarios.Count > 1)
+            {
+                Console.WriteLine("Também podem integrar: ");
                 Console.WriteLine("");
-                Console.WriteLine("\tMelhor dupla formada:");
+                var bla = melhoresUsuarios.Skip(1).ToList();
+                foreach (var item in bla)
+                {
+                    Console.WriteLine("* " + item.Key.Nome + ".");
+                }
                 Console.WriteLine("");
-                Console.WriteLine("1. " + nome1 + "!");
-                Console.WriteLine("2. " + nome2 + "!");
-                Console.WriteLine("");
-                Console.WriteLine("Clique para continuar.");
-                Console.ReadKey();
-                MontaMenuFinal();
-            
+            }
+            Console.WriteLine("Clique para continuar.");
+            Console.ReadKey();
+            MontaMenuFinal();
+
         }
 
         #region Calculo Desempenho        
@@ -439,7 +456,7 @@ namespace IA___Fuzzy
             return dicionario;
         }
 
-        private static Dictionary<Usuario, int> CalcularDesempenhoNotas(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Usuario, int> CalcularDesempenhoNotas(List<Usuario> usuarios)
         {
             Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
             int valorAtual;
@@ -553,7 +570,7 @@ namespace IA___Fuzzy
             return dicionario;
         }
 
-        private static Dictionary<Usuario, int> CalcularDesempenhoConfianca(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Usuario, int> CalcularDesempenhoConfianca(List<Usuario> usuarios)
         {
             Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
             int valorAtual;
@@ -667,7 +684,7 @@ namespace IA___Fuzzy
             return dicionario;
         }
 
-        private static Dictionary<Usuario, int> CalcularDesempenhoAtividadesComum(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Usuario, int> CalcularDesempenhoAtividadesComum(List<Usuario> usuarios)
         {
             Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
             int valorAtual;
@@ -781,7 +798,7 @@ namespace IA___Fuzzy
             return dicionario;
         }
 
-        private static Dictionary<Usuario, int> CalcularDesempenhoDominioConteudo(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Usuario, int> CalcularDesempenhoDominioConteudo(List<Usuario> usuarios)
         {
             Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
             int valorAtual;
@@ -895,7 +912,7 @@ namespace IA___Fuzzy
             return dicionario;
         }
 
-        private static Dictionary<Usuario, int> CalcularDesempenhoDedicacao(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Usuario, int> CalcularDesempenhoDedicacao(List<Usuario> usuarios)
         {
             Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
             int valorAtual;
@@ -1009,7 +1026,7 @@ namespace IA___Fuzzy
             return dicionario;
         }
 
-        private static Dictionary<Usuario, int> CalcularDesempenhoFaltas(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Usuario, int> CalcularDesempenhoFaltas(List<Usuario> usuarios)
         {
             Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
             int valorAtual;
@@ -1123,7 +1140,7 @@ namespace IA___Fuzzy
             return dicionario;
         }
 
-        private static Dictionary<Usuario, int> CalcularDesempenhoInteligencia(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Usuario, int> CalcularDesempenhoInteligencia(List<Usuario> usuarios)
         {
             Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
             int valorAtual;
@@ -1237,7 +1254,7 @@ namespace IA___Fuzzy
             return dicionario;
         }
 
-        private static Dictionary<Usuario, int> CalcularDesempenhoComunicacao(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Usuario, int> CalcularDesempenhoComunicacao(List<Usuario> usuarios)
         {
             Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
             int valorAtual;
@@ -1352,18 +1369,121 @@ namespace IA___Fuzzy
         }
 
 
-        private static Dictionary<Usuario, KeyValuePair<Usuario, int>> MontaMelhorDupla(Dictionary<Usuario, int> usuariosComMelhoresRelacionamento, Dictionary<Usuario, int> usuariosComMelhoresTempoLivres,
-                                                        Dictionary<Usuario, int> usuariosComMelhoresNotas, Dictionary<Usuario, int> usuariosComMelhoresConfianca, 
+        private static Dictionary<Usuario, KeyValuePair<Usuario, int>> MontaMelhorDupla(
+                                                        Dictionary<Usuario, int> usuariosComMelhoresRelacionamento, Dictionary<Usuario, int> usuariosComMelhoresTempoLivres,
+                                                        Dictionary<Usuario, int> usuariosComMelhoresNotas, Dictionary<Usuario, int> usuariosComMelhoresConfianca,
                                                         Dictionary<Usuario, int> usuariosComMelhoresAtividadesComum, Dictionary<Usuario, int> usuariosComMelhoresDominioConteudo,
                                                         Dictionary<Usuario, int> usariosComMelhoresDedicacoes, Dictionary<Usuario, int> usuariosComMelhoresFaltas,
                                                         Dictionary<Usuario, int> usuariosMaisInteligentes, Dictionary<Usuario, int> usuariosMaisComunicativos)
         {
             Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
+            int valorAtual;
+
+            #region Junção dos Resultados
 
             foreach (var item in usuariosComMelhoresRelacionamento)
                 dicionario.Add(item.Key, item.Value);
 
-            //Restantes dos foreachs cuidando os valores já inseridos na chave
+            foreach (var item in usuariosComMelhoresTempoLivres)
+            {
+                if (!dicionario.ContainsKey(item.Key))
+                    dicionario.Add(item.Key, item.Value);
+                else
+                {
+                    if (dicionario.TryGetValue(item.Key, out valorAtual))
+                        dicionario[item.Key] = valorAtual + item.Value;
+                }
+            }
+
+            foreach (var item in usuariosComMelhoresNotas)
+            {
+                if (!dicionario.ContainsKey(item.Key))
+                    dicionario.Add(item.Key, item.Value);
+                else
+                {
+                    if (dicionario.TryGetValue(item.Key, out valorAtual))
+                        dicionario[item.Key] = valorAtual + item.Value;
+                }
+            }
+
+            foreach (var item in usuariosComMelhoresConfianca)
+            {
+                if (!dicionario.ContainsKey(item.Key))
+                    dicionario.Add(item.Key, item.Value);
+                else
+                {
+                    if (dicionario.TryGetValue(item.Key, out valorAtual))
+                        dicionario[item.Key] = valorAtual + item.Value;
+                }
+            }
+
+            foreach (var item in usuariosComMelhoresAtividadesComum)
+            {
+                if (!dicionario.ContainsKey(item.Key))
+                    dicionario.Add(item.Key, item.Value);
+                else
+                {
+                    if (dicionario.TryGetValue(item.Key, out valorAtual))
+                        dicionario[item.Key] = valorAtual + item.Value;
+                }
+            }
+
+            foreach (var item in usuariosComMelhoresDominioConteudo)
+            {
+                if (!dicionario.ContainsKey(item.Key))
+                    dicionario.Add(item.Key, item.Value);
+                else
+                {
+                    if (dicionario.TryGetValue(item.Key, out valorAtual))
+                        dicionario[item.Key] = valorAtual + item.Value;
+                }
+            }
+
+            foreach (var item in usariosComMelhoresDedicacoes)
+            {
+                if (!dicionario.ContainsKey(item.Key))
+                    dicionario.Add(item.Key, item.Value);
+                else
+                {
+                    if (dicionario.TryGetValue(item.Key, out valorAtual))
+                        dicionario[item.Key] = valorAtual + item.Value;
+                }
+            }
+
+            foreach (var item in usuariosComMelhoresFaltas)
+            {
+                if (!dicionario.ContainsKey(item.Key))
+                    dicionario.Add(item.Key, item.Value);
+                else
+                {
+                    if (dicionario.TryGetValue(item.Key, out valorAtual))
+                        dicionario[item.Key] = valorAtual + item.Value;
+                }
+            }
+
+            foreach (var item in usuariosMaisInteligentes)
+            {
+                if (!dicionario.ContainsKey(item.Key))
+                    dicionario.Add(item.Key, item.Value);
+                else
+                {
+                    if (dicionario.TryGetValue(item.Key, out valorAtual))
+                        dicionario[item.Key] = valorAtual + item.Value;
+                }
+            }
+
+            foreach (var item in usuariosMaisComunicativos)
+            {
+                if (!dicionario.ContainsKey(item.Key))
+                    dicionario.Add(item.Key, item.Value);
+                else
+                {
+                    if (dicionario.TryGetValue(item.Key, out valorAtual))
+                        dicionario[item.Key] = valorAtual + item.Value;
+                }
+            }
+
+            #endregion
 
             return dicionario.OrderByDescending(o => o.Value).ToDictionary(o => o.Key);
         }
@@ -1389,7 +1509,7 @@ namespace IA___Fuzzy
             Console.Write("SUA OPÇÃO: ");
             var opcao = Console.ReadLine();
 
-            MontaLogica(opcao);
+            //MontaLogica(opcao);
         }
 
         public static void MontaMenuErro()
@@ -1398,7 +1518,7 @@ namespace IA___Fuzzy
             Console.WriteLine("Opção Inválida.");
             Console.WriteLine("");
             Console.WriteLine("╔════════════════════════════════════════╗");
-            Console.WriteLine("║ \tDeseja voltar ao menu?           ║");
+            Console.WriteLine("║ \tDeseja refazer o cálculo?        ║");
             Console.WriteLine("║ 1. Sim me leva até lá!                 ║");
             Console.WriteLine("║ 0. Não, sair.                          ║");
             Console.WriteLine("╚════════════════════════════════════════╝");
@@ -1412,7 +1532,8 @@ namespace IA___Fuzzy
                     Environment.Exit(1);
                     break;
                 case "1":
-                    MontaMenu();
+                    Console.Clear();
+                    Main(new string[] { "teste" });
                     break;
                 default:
                     MontaMenuErro();
@@ -1427,7 +1548,7 @@ namespace IA___Fuzzy
                 Console.WriteLine("Parabéns, agora você tem a melhor dupla possível para a realização do trabalho. Aproveite!");
                 Console.WriteLine("");
                 Console.WriteLine("╔════════════════════════════════════════╗");
-                Console.WriteLine("║ \tDeseja voltar ao menu?           ║");
+                Console.WriteLine("║ \tDeseja refazer o cálculo?        ║");
                 Console.WriteLine("║ 1. Sim me leva até lá!                 ║");
                 Console.WriteLine("║ 0. Não, sair.                          ║");
                 Console.WriteLine("╚════════════════════════════════════════╝");
@@ -1441,7 +1562,8 @@ namespace IA___Fuzzy
                         Environment.Exit(1);
                         break;
                     case "1":
-                        MontaMenu();
+                        Console.Clear();
+                        Main(new string[] { "teste"});
                         break;
                     default:
                         MontaMenuErro();
@@ -1459,33 +1581,6 @@ namespace IA___Fuzzy
         #endregion
 
     }
-
-    #region Enuns
-
-    public enum Disciplina
-    {
-        Programacao = 1,
-        EstruturaDados = 2,
-        BancoDados = 3,
-        Calculo = 4,
-        GerenciaProjetos = 5
-    }
-
-    public enum Qualificações
-    {
-        Relacionamento = 1,
-        TempoLivre = 2,
-        Notas = 3,
-        Confiança = 4,
-        AtividadesComum = 5,
-        DominioConteudo = 6,
-        Dedicacao = 7,
-        Faltas = 8,
-        Inteligencia = 9,
-        Comunicacao = 10
-    }
-
-    #endregion
 
 }
 
