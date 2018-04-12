@@ -177,24 +177,24 @@ namespace IA___Fuzzy
 
         public static void MontaFuzzy(List<Usuario> usuarios, string opcao)
         {
-            Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresRelacionamento = CalcularDesempenhoRelacionamento(usuarios);
-            Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresTempoLivres = CalcularDesempenhoTempoLivre(usuarios);
-            Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresNotas = CalcularDesempenhoNotas(usuarios, int.Parse(opcao));
-            Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresConfianca = CalcularDesempenhoConfianca(usuarios, int.Parse(opcao));
-            Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresAtividadesComum = CalcularDesempenhoAtividadesComum(usuarios, int.Parse(opcao));
-            Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresDominioConteudo = CalcularDesempenhoDominioConteudo(usuarios, int.Parse(opcao));
-            Dictionary<Tuple<Usuario, Usuario>, int> usariosComMelhoresDedicacoes = CalcularDesempenhoDedicacao(usuarios, int.Parse(opcao));
-            Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresFaltas = CalcularDesempenhoFaltas(usuarios, int.Parse(opcao));
-            Dictionary<Tuple<Usuario, Usuario>, int> usuariosMaisInteligentes = CalcularDesempenhoInteligencia(usuarios, int.Parse(opcao));
-            Dictionary<Tuple<Usuario, Usuario>, int> usuariosMaisComunicativos = CalcularDesempenhoComunicacao(usuarios, int.Parse(opcao));
+            Dictionary<Usuario, int> usuariosComMelhoresRelacionamento = CalcularDesempenhoRelacionamento(usuarios);
+            Dictionary<Usuario, int> usuariosComMelhoresTempoLivres = CalcularDesempenhoTempoLivre(usuarios);
+            Dictionary<Usuario, int> usuariosComMelhoresNotas = CalcularDesempenhoNotas(usuarios, int.Parse(opcao));
+            Dictionary<Usuario, int> usuariosComMelhoresConfianca = CalcularDesempenhoConfianca(usuarios, int.Parse(opcao));
+            Dictionary<Usuario, int> usuariosComMelhoresAtividadesComum = CalcularDesempenhoAtividadesComum(usuarios, int.Parse(opcao));
+            Dictionary<Usuario, int> usuariosComMelhoresDominioConteudo = CalcularDesempenhoDominioConteudo(usuarios, int.Parse(opcao));
+            Dictionary<Usuario, int> usariosComMelhoresDedicacoes = CalcularDesempenhoDedicacao(usuarios, int.Parse(opcao));
+            Dictionary<Usuario, int> usuariosComMelhoresFaltas = CalcularDesempenhoFaltas(usuarios, int.Parse(opcao));
+            Dictionary<Usuario, int> usuariosMaisInteligentes = CalcularDesempenhoInteligencia(usuarios, int.Parse(opcao));
+            Dictionary<Usuario, int> usuariosMaisComunicativos = CalcularDesempenhoComunicacao(usuarios, int.Parse(opcao));
 
-            Dictionary<Tuple<Usuario, Usuario>, int> duplaFinal = MontaMelhorDupla(usuariosComMelhoresRelacionamento, usuariosComMelhoresTempoLivres, usuariosComMelhoresNotas, usuariosComMelhoresConfianca,
+            Dictionary<Usuario, KeyValuePair<Usuario, int>> duplaFinal = MontaMelhorDupla(usuariosComMelhoresRelacionamento, usuariosComMelhoresTempoLivres, usuariosComMelhoresNotas, usuariosComMelhoresConfianca,
                                                             usuariosComMelhoresAtividadesComum, usuariosComMelhoresDominioConteudo, usariosComMelhoresDedicacoes, usuariosComMelhoresFaltas,
                                                             usuariosMaisInteligentes, usuariosMaisComunicativos);
 
           
-                var nome1 = duplaFinal.First().Key.Item1.Nome;
-                var nome2 = duplaFinal.Last().Key.Item2.Nome;
+                var nome1 = usuarioPessoal.Nome;
+                var nome2 = duplaFinal.First().Key.Nome;
 
                 Console.Clear();
                 Console.WriteLine("");
@@ -211,169 +211,1161 @@ namespace IA___Fuzzy
 
         #region Calculo Desempenho        
 
-        private static Dictionary<Tuple<Usuario, Usuario>, int> CalcularDesempenhoRelacionamento(List<Usuario> usuarios)
+        private static Dictionary<Usuario, int> CalcularDesempenhoRelacionamento(List<Usuario> usuarios)
         {
-            Dictionary<Tuple<Usuario, Usuario>, int> dicionario = new Dictionary<Tuple<Usuario, Usuario>, int>();
+            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
             int valorAtual;
+
+            #region Monta Desempenho            
 
             foreach (var item in usuarios)
             {
                 if (usuarioPessoal.RelacionamentoFraco && item.RelacionamentoFraco)
                 {
-                    if (!dicionario.ContainsKey(new Tuple<Usuario, Usuario>(usuarioPessoal, item)))
-                        dicionario.Add(new Tuple<Usuario, Usuario>(usuarioPessoal, item), 0);
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 0);
                     else
                     {
-                        if (dicionario.TryGetValue(new Tuple<Usuario, Usuario>(usuarioPessoal, item), out valorAtual))
-                            dicionario[new Tuple<Usuario, Usuario>(usuarioPessoal, item)] = valorAtual + 0;
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 0;
                     }
                 }
 
                 if (usuarioPessoal.RelacionamentoFraco && item.RelacionamentoMedio)
                 {
-                    if (!dicionario.ContainsKey(new Tuple<Usuario, Usuario>(usuarioPessoal, item)))
-                        dicionario.Add(new Tuple<Usuario, Usuario>(usuarioPessoal, item), 15);
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 15);
                     else
                     {
-                        if (dicionario.TryGetValue(new Tuple<Usuario, Usuario>(usuarioPessoal, item), out valorAtual))
-                            dicionario[new Tuple<Usuario, Usuario>(usuarioPessoal, item)] = valorAtual + 15;
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 15;
                     }
                 }
 
                 if (usuarioPessoal.RelacionamentoFraco && item.RelacionamentoForte)
                 {
-                    if (!dicionario.ContainsKey(new Tuple<Usuario, Usuario>(usuarioPessoal, item)))
-                        dicionario.Add(new Tuple<Usuario, Usuario>(usuarioPessoal, item), 30);
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 30);
                     else
                     {
-                        if (dicionario.TryGetValue(new Tuple<Usuario, Usuario>(usuarioPessoal, item), out valorAtual))
-                            dicionario[new Tuple<Usuario, Usuario>(usuarioPessoal, item)] = valorAtual + 30;
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 30;
                     }
                 }
 
                 if (usuarioPessoal.RelacionamentoMedio && item.RelacionamentoFraco)
                 {
-                    if (!dicionario.ContainsKey(new Tuple<Usuario, Usuario>(usuarioPessoal, item)))
-                        dicionario.Add(new Tuple<Usuario, Usuario>(usuarioPessoal, item), 15);
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 15);
                     else
                     {
-                        if (dicionario.TryGetValue(new Tuple<Usuario, Usuario>(usuarioPessoal, item), out valorAtual))
-                            dicionario[new Tuple<Usuario, Usuario>(usuarioPessoal, item)] = valorAtual + 15;
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 15;
                     }
                 }
 
                 if (usuarioPessoal.RelacionamentoMedio && item.RelacionamentoMedio)
                 {
-                    if (!dicionario.ContainsKey(new Tuple<Usuario, Usuario>(usuarioPessoal, item)))
-                        dicionario.Add(new Tuple<Usuario, Usuario>(usuarioPessoal, item), 50);
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 50);
                     else
                     {
-                        if (dicionario.TryGetValue(new Tuple<Usuario, Usuario>(usuarioPessoal, item), out valorAtual))
-                            dicionario[new Tuple<Usuario, Usuario>(usuarioPessoal, item)] = valorAtual + 50;
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 50;
                     }
                 }
 
                 if (usuarioPessoal.RelacionamentoMedio && item.RelacionamentoForte)
                 {
-                    if (!dicionario.ContainsKey(new Tuple<Usuario, Usuario>(usuarioPessoal, item)))
-                        dicionario.Add(new Tuple<Usuario, Usuario>(usuarioPessoal, item), 75);
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 75);
                     else
                     {
-                        if (dicionario.TryGetValue(new Tuple<Usuario, Usuario>(usuarioPessoal, item), out valorAtual))
-                            dicionario[new Tuple<Usuario, Usuario>(usuarioPessoal, item)] = valorAtual + 75;
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 75;
                     }
                 }
 
                 if (usuarioPessoal.RelacionamentoForte && item.RelacionamentoFraco)
                 {
-                    if (!dicionario.ContainsKey(new Tuple<Usuario, Usuario>(usuarioPessoal, item)))
-                        dicionario.Add(new Tuple<Usuario, Usuario>(usuarioPessoal, item), 30);
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 30);
                     else
                     {
-                        if (dicionario.TryGetValue(new Tuple<Usuario, Usuario>(usuarioPessoal, item), out valorAtual))
-                            dicionario[new Tuple<Usuario, Usuario>(usuarioPessoal, item)] = valorAtual + 30;
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 30;
                     }
                 }
 
                 if (usuarioPessoal.RelacionamentoForte && item.RelacionamentoMedio)
                 {
-                    if (!dicionario.ContainsKey(new Tuple<Usuario, Usuario>(usuarioPessoal, item)))
-                        dicionario.Add(new Tuple<Usuario, Usuario>(usuarioPessoal, item), 75);
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 75);
                     else
                     {
-                        if (dicionario.TryGetValue(new Tuple<Usuario, Usuario>(usuarioPessoal, item), out valorAtual))
-                            dicionario[new Tuple<Usuario, Usuario>(usuarioPessoal, item)] = valorAtual + 75;
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 75;
                     }
                 }
 
                 if (usuarioPessoal.RelacionamentoForte && item.RelacionamentoForte)
                 {
-                    if (!dicionario.ContainsKey(new Tuple<Usuario, Usuario>(usuarioPessoal, item)))
-                        dicionario.Add(new Tuple<Usuario, Usuario>(usuarioPessoal, item), 100);
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 100);
                     else
                     {
-                        if (dicionario.TryGetValue(new Tuple<Usuario, Usuario>(usuarioPessoal, item), out valorAtual))
-                            dicionario[new Tuple<Usuario, Usuario>(usuarioPessoal, item)] = valorAtual + 100;
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 100;
                     }
                 }
             }
 
+            #endregion
+
             return dicionario;
         }
 
-        private static Dictionary<Tuple<Usuario, Usuario>, int> CalcularDesempenhoTempoLivre(List<Usuario> usuarios)
+        private static Dictionary<Usuario, int> CalcularDesempenhoTempoLivre(List<Usuario> usuarios)
         {
-            throw new NotImplementedException();
+            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
+            int valorAtual;
+
+            #region Monta Desempenho            
+
+            foreach (var item in usuarios)
+            {
+                if (usuarioPessoal.TempoLivreFraco && item.TempoLivreFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 0);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 0;
+                    }
+                }
+
+                if (usuarioPessoal.TempoLivreFraco && item.TempoLivreMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 15);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 15;
+                    }
+                }
+
+                if (usuarioPessoal.TempoLivreFraco && item.TempoLivreForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 30);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 30;
+                    }
+                }
+
+                if (usuarioPessoal.TempoLivreMedio && item.TempoLivreFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 15);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 15;
+                    }
+                }
+
+                if (usuarioPessoal.TempoLivreMedio && item.TempoLivreMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 50);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 50;
+                    }
+                }
+
+                if (usuarioPessoal.TempoLivreMedio && item.TempoLivreForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 75);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 75;
+                    }
+                }
+
+                if (usuarioPessoal.TempoLivreForte && item.TempoLivreFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 30);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 30;
+                    }
+                }
+
+                if (usuarioPessoal.TempoLivreForte && item.TempoLivreMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 75);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 75;
+                    }
+                }
+
+                if (usuarioPessoal.TempoLivreForte && item.TempoLivreForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 100);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 100;
+                    }
+                }
+            }
+
+            #endregion
+
+            return dicionario;
         }
 
-        private static Dictionary<Tuple<Usuario, Usuario>, int> CalcularDesempenhoNotas(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Usuario, int> CalcularDesempenhoNotas(List<Usuario> usuarios, int opcao)
         {
-            throw new NotImplementedException();
+            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
+            int valorAtual;
+
+            #region Monta Desempenho            
+
+            foreach (var item in usuarios)
+            {
+                if (usuarioPessoal.NotasFraco && item.NotasFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 0);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 0;
+                    }
+                }
+
+                if (usuarioPessoal.NotasFraco && item.NotasMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 15);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 15;
+                    }
+                }
+
+                if (usuarioPessoal.NotasFraco && item.NotasForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 30);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 30;
+                    }
+                }
+
+                if (usuarioPessoal.NotasMedio && item.NotasFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 15);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 15;
+                    }
+                }
+
+                if (usuarioPessoal.NotasMedio && item.NotasMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 50);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 50;
+                    }
+                }
+
+                if (usuarioPessoal.NotasMedio && item.NotasForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 75);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 75;
+                    }
+                }
+
+                if (usuarioPessoal.NotasForte && item.NotasFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 30);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 30;
+                    }
+                }
+
+                if (usuarioPessoal.NotasForte && item.NotasMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 75);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 75;
+                    }
+                }
+
+                if (usuarioPessoal.NotasForte && item.NotasForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 100);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 100;
+                    }
+                }
+            }
+
+            #endregion
+
+            return dicionario;
         }
 
-        private static Dictionary<Tuple<Usuario, Usuario>, int> CalcularDesempenhoConfianca(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Usuario, int> CalcularDesempenhoConfianca(List<Usuario> usuarios, int opcao)
         {
-            throw new NotImplementedException();
+            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
+            int valorAtual;
+
+            #region Monta Desempenho            
+
+            foreach (var item in usuarios)
+            {
+                if (usuarioPessoal.ConfiancaFraco && item.ConfiancaFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 0);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 0;
+                    }
+                }
+
+                if (usuarioPessoal.ConfiancaFraco && item.ConfiancaMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 15);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 15;
+                    }
+                }
+
+                if (usuarioPessoal.ConfiancaFraco && item.ConfiancaForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 30);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 30;
+                    }
+                }
+
+                if (usuarioPessoal.ConfiancaMedio && item.ConfiancaFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 15);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 15;
+                    }
+                }
+
+                if (usuarioPessoal.ConfiancaMedio && item.ConfiancaMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 50);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 50;
+                    }
+                }
+
+                if (usuarioPessoal.ConfiancaMedio && item.ConfiancaForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 75);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 75;
+                    }
+                }
+
+                if (usuarioPessoal.ConfiancaForte && item.ConfiancaFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 30);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 30;
+                    }
+                }
+
+                if (usuarioPessoal.ConfiancaForte && item.ConfiancaMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 75);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 75;
+                    }
+                }
+
+                if (usuarioPessoal.ConfiancaForte && item.ConfiancaForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 100);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 100;
+                    }
+                }
+            }
+
+            #endregion
+
+            return dicionario;
         }
 
-        private static Dictionary<Tuple<Usuario, Usuario>, int> CalcularDesempenhoAtividadesComum(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Usuario, int> CalcularDesempenhoAtividadesComum(List<Usuario> usuarios, int opcao)
         {
-            throw new NotImplementedException();
+            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
+            int valorAtual;
+
+            #region Monta Desempenho            
+
+            foreach (var item in usuarios)
+            {
+                if (usuarioPessoal.AtividadesComumFraco && item.AtividadesComumFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 0);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 0;
+                    }
+                }
+
+                if (usuarioPessoal.AtividadesComumFraco && item.AtividadesComumMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 15);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 15;
+                    }
+                }
+
+                if (usuarioPessoal.AtividadesComumFraco && item.AtividadesComumForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 30);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 30;
+                    }
+                }
+
+                if (usuarioPessoal.AtividadesComumMedio && item.AtividadesComumFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 15);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 15;
+                    }
+                }
+
+                if (usuarioPessoal.AtividadesComumMedio && item.AtividadesComumMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 50);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 50;
+                    }
+                }
+
+                if (usuarioPessoal.AtividadesComumMedio && item.AtividadesComumForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 75);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 75;
+                    }
+                }
+
+                if (usuarioPessoal.AtividadesComumForte && item.AtividadesComumFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 30);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 30;
+                    }
+                }
+
+                if (usuarioPessoal.AtividadesComumForte && item.AtividadesComumMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 75);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 75;
+                    }
+                }
+
+                if (usuarioPessoal.AtividadesComumForte && item.AtividadesComumForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 100);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 100;
+                    }
+                }
+            }
+
+            #endregion
+
+            return dicionario;
         }
 
-        private static Dictionary<Tuple<Usuario, Usuario>, int> CalcularDesempenhoDominioConteudo(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Usuario, int> CalcularDesempenhoDominioConteudo(List<Usuario> usuarios, int opcao)
         {
-            throw new NotImplementedException();
+            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
+            int valorAtual;
+
+            #region Monta Desempenho            
+
+            foreach (var item in usuarios)
+            {
+                if (usuarioPessoal.DominioConteudoFraco && item.DominioConteudoFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 0);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 0;
+                    }
+                }
+
+                if (usuarioPessoal.DominioConteudoFraco && item.DominioConteudoMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 15);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 15;
+                    }
+                }
+
+                if (usuarioPessoal.DominioConteudoFraco && item.DominioConteudoForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 30);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 30;
+                    }
+                }
+
+                if (usuarioPessoal.DominioConteudoMedio && item.DominioConteudoFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 15);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 15;
+                    }
+                }
+
+                if (usuarioPessoal.DominioConteudoMedio && item.DominioConteudoMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 50);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 50;
+                    }
+                }
+
+                if (usuarioPessoal.DominioConteudoMedio && item.DominioConteudoForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 75);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 75;
+                    }
+                }
+
+                if (usuarioPessoal.DominioConteudoForte && item.DominioConteudoFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 30);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 30;
+                    }
+                }
+
+                if (usuarioPessoal.DominioConteudoForte && item.DominioConteudoMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 75);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 75;
+                    }
+                }
+
+                if (usuarioPessoal.DominioConteudoForte && item.DominioConteudoForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 100);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 100;
+                    }
+                }
+            }
+
+            #endregion
+
+            return dicionario;
         }
 
-        private static Dictionary<Tuple<Usuario, Usuario>, int> CalcularDesempenhoDedicacao(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Usuario, int> CalcularDesempenhoDedicacao(List<Usuario> usuarios, int opcao)
         {
-            throw new NotImplementedException();
+            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
+            int valorAtual;
+
+            #region Monta Desempenho            
+
+            foreach (var item in usuarios)
+            {
+                if (usuarioPessoal.DedicacaoFraco && item.DedicacaoFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 0);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 0;
+                    }
+                }
+
+                if (usuarioPessoal.DedicacaoFraco && item.DedicacaoMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 15);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 15;
+                    }
+                }
+
+                if (usuarioPessoal.DedicacaoFraco && item.DedicacaoForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 30);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 30;
+                    }
+                }
+
+                if (usuarioPessoal.DedicacaoMedio && item.DedicacaoFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 15);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 15;
+                    }
+                }
+
+                if (usuarioPessoal.DedicacaoMedio && item.DedicacaoMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 50);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 50;
+                    }
+                }
+
+                if (usuarioPessoal.DedicacaoMedio && item.DedicacaoForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 75);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 75;
+                    }
+                }
+
+                if (usuarioPessoal.DedicacaoForte && item.DedicacaoFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 30);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 30;
+                    }
+                }
+
+                if (usuarioPessoal.DedicacaoForte && item.DedicacaoMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 75);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 75;
+                    }
+                }
+
+                if (usuarioPessoal.DedicacaoForte && item.DedicacaoForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 100);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 100;
+                    }
+                }
+            }
+
+            #endregion
+
+            return dicionario;
         }
 
-        private static Dictionary<Tuple<Usuario, Usuario>, int> CalcularDesempenhoFaltas(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Usuario, int> CalcularDesempenhoFaltas(List<Usuario> usuarios, int opcao)
         {
-            throw new NotImplementedException();
+            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
+            int valorAtual;
+
+            #region Monta Desempenho            
+
+            foreach (var item in usuarios)
+            {
+                if (usuarioPessoal.FaltasFraco && item.FaltasFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 0);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 0;
+                    }
+                }
+
+                if (usuarioPessoal.FaltasFraco && item.FaltasMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 15);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 15;
+                    }
+                }
+
+                if (usuarioPessoal.FaltasFraco && item.FaltasForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 30);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 30;
+                    }
+                }
+
+                if (usuarioPessoal.FaltasMedio && item.FaltasFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 15);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 15;
+                    }
+                }
+
+                if (usuarioPessoal.FaltasMedio && item.FaltasMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 50);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 50;
+                    }
+                }
+
+                if (usuarioPessoal.FaltasMedio && item.FaltasForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 75);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 75;
+                    }
+                }
+
+                if (usuarioPessoal.FaltasForte && item.FaltasFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 30);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 30;
+                    }
+                }
+
+                if (usuarioPessoal.FaltasForte && item.FaltasMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 75);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 75;
+                    }
+                }
+
+                if (usuarioPessoal.FaltasForte && item.FaltasForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 100);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 100;
+                    }
+                }
+            }
+
+            #endregion
+
+            return dicionario;
         }
 
-        private static Dictionary<Tuple<Usuario, Usuario>, int> CalcularDesempenhoInteligencia(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Usuario, int> CalcularDesempenhoInteligencia(List<Usuario> usuarios, int opcao)
         {
-            throw new NotImplementedException();
+            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
+            int valorAtual;
+
+            #region Monta Desempenho            
+
+            foreach (var item in usuarios)
+            {
+                if (usuarioPessoal.InteligenciaFraco && item.InteligenciaFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 0);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 0;
+                    }
+                }
+
+                if (usuarioPessoal.InteligenciaFraco && item.InteligenciaMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 15);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 15;
+                    }
+                }
+
+                if (usuarioPessoal.InteligenciaFraco && item.InteligenciaForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 30);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 30;
+                    }
+                }
+
+                if (usuarioPessoal.InteligenciaMedio && item.InteligenciaFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 15);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 15;
+                    }
+                }
+
+                if (usuarioPessoal.InteligenciaMedio && item.InteligenciaMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 50);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 50;
+                    }
+                }
+
+                if (usuarioPessoal.InteligenciaMedio && item.InteligenciaForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 75);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 75;
+                    }
+                }
+
+                if (usuarioPessoal.InteligenciaForte && item.InteligenciaFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 30);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 30;
+                    }
+                }
+
+                if (usuarioPessoal.InteligenciaForte && item.InteligenciaMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 75);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 75;
+                    }
+                }
+
+                if (usuarioPessoal.InteligenciaForte && item.InteligenciaForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 100);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 100;
+                    }
+                }
+            }
+
+            #endregion
+
+            return dicionario;
         }
 
-        private static Dictionary<Tuple<Usuario, Usuario>, int> CalcularDesempenhoComunicacao(List<Usuario> usuarios, int opcao)
+        private static Dictionary<Usuario, int> CalcularDesempenhoComunicacao(List<Usuario> usuarios, int opcao)
         {
-            throw new NotImplementedException();
+            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
+            int valorAtual;
+
+            #region Monta Desempenho            
+
+            foreach (var item in usuarios)
+            {
+                if (usuarioPessoal.ComunicacaoFraco && item.ComunicacaoFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 0);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 0;
+                    }
+                }
+
+                if (usuarioPessoal.ComunicacaoFraco && item.ComunicacaoMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 15);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 15;
+                    }
+                }
+
+                if (usuarioPessoal.ComunicacaoFraco && item.ComunicacaoForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 30);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 30;
+                    }
+                }
+
+                if (usuarioPessoal.ComunicacaoMedio && item.ComunicacaoFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 15);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 15;
+                    }
+                }
+
+                if (usuarioPessoal.ComunicacaoMedio && item.ComunicacaoMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 50);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 50;
+                    }
+                }
+
+                if (usuarioPessoal.ComunicacaoMedio && item.ComunicacaoForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 75);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 75;
+                    }
+                }
+
+                if (usuarioPessoal.ComunicacaoForte && item.ComunicacaoFraco)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 30);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 30;
+                    }
+                }
+
+                if (usuarioPessoal.ComunicacaoForte && item.ComunicacaoMedio)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 75);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 75;
+                    }
+                }
+
+                if (usuarioPessoal.ComunicacaoForte && item.ComunicacaoForte)
+                {
+                    if (!dicionario.ContainsKey(item))
+                        dicionario.Add(item, 100);
+                    else
+                    {
+                        if (dicionario.TryGetValue(item, out valorAtual))
+                            dicionario[item] = valorAtual + 100;
+                    }
+                }
+            }
+
+            #endregion
+
+            return dicionario;
         }
 
 
-        private static Dictionary<Tuple<Usuario, Usuario>, int> MontaMelhorDupla(Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresRelacionamento, Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresTempoLivres,
-                                                        Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresNotas, Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresConfianca, 
-                                                        Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresAtividadesComum, Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresDominioConteudo,
-                                                        Dictionary<Tuple<Usuario, Usuario>, int> usariosComMelhoresDedicacoes, Dictionary<Tuple<Usuario, Usuario>, int> usuariosComMelhoresFaltas,
-                                                        Dictionary<Tuple<Usuario, Usuario>, int> usuariosMaisInteligentes, Dictionary<Tuple<Usuario, Usuario>, int> usuariosMaisComunicativos)
+        private static Dictionary<Usuario, KeyValuePair<Usuario, int>> MontaMelhorDupla(Dictionary<Usuario, int> usuariosComMelhoresRelacionamento, Dictionary<Usuario, int> usuariosComMelhoresTempoLivres,
+                                                        Dictionary<Usuario, int> usuariosComMelhoresNotas, Dictionary<Usuario, int> usuariosComMelhoresConfianca, 
+                                                        Dictionary<Usuario, int> usuariosComMelhoresAtividadesComum, Dictionary<Usuario, int> usuariosComMelhoresDominioConteudo,
+                                                        Dictionary<Usuario, int> usariosComMelhoresDedicacoes, Dictionary<Usuario, int> usuariosComMelhoresFaltas,
+                                                        Dictionary<Usuario, int> usuariosMaisInteligentes, Dictionary<Usuario, int> usuariosMaisComunicativos)
         {
-            throw new NotImplementedException();
+            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
+
+            foreach (var item in usuariosComMelhoresRelacionamento)
+                dicionario.Add(item.Key, item.Value);
+
+            //Restantes dos foreachs cuidando os valores já inseridos na chave
+
+            return dicionario.OrderByDescending(o => o.Value).ToDictionary(o => o.Key);
         }
 
         #endregion
