@@ -1,4 +1,7 @@
-﻿namespace IA___Fuzzy.Domain
+﻿using DotFuzzy;
+
+
+namespace IA___Fuzzy.Domain
 {
     public class Usuario
     {
@@ -54,5 +57,7 @@
         public bool ComunicacaoFraco { get; set; }
         public bool ComunicacaoMedio { get; set; }
         public bool ComunicacaoForte { get; set; }
+
+        public LinguisticVariable risco{ get; set; }
     }
 }
