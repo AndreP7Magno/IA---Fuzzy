@@ -58,6 +58,6 @@ namespace IA___Fuzzy.Domain
         public bool ComunicacaoMedio { get; set; }
         public bool ComunicacaoForte { get; set; }
 
-        public LinguisticVariable risco{ get; set; }
+        public LinguisticVariable risco { get; set; }
     }
 }

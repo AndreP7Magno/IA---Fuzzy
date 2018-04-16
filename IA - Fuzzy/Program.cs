@@ -1,4 +1,5 @@
-﻿using IA___Fuzzy.Domain;
+﻿using DotFuzzy;
+using IA___Fuzzy.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -230,6 +231,38 @@ namespace IA___Fuzzy
 
         private static Dictionary<Usuario, int> CalcularDesempenhoRelacionamento(List<Usuario> usuarios)
         {
+            LinguisticVariable RelacionamentoPessoalQTD = new LinguisticVariable("relacionamentoPessoalQTD");
+            RelacionamentoPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0.5, 1, 1, 1.5));
+            RelacionamentoPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 1.5, 2, 2, 2.5));
+            RelacionamentoPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 2.5, 3, 3, 4));
+
+            LinguisticVariable RelacionamentoGeralQTD = new LinguisticVariable("relacionamentoGeralQTD");
+            RelacionamentoGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0.5, 1, 1, 1.5));
+            RelacionamentoGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 1.5, 2, 2, 2.5));
+            RelacionamentoGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 2.5, 3, 3, 4));
+
+            LinguisticVariable riscoQTD = new LinguisticVariable("riscoQTD");
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
+
+            FuzzyEngine fuzzyEngineRelacionamento = new FuzzyEngine();
+            fuzzyEngineRelacionamento.LinguisticVariableCollection.Add(RelacionamentoPessoalQTD);
+            fuzzyEngineRelacionamento.LinguisticVariableCollection.Add(RelacionamentoGeralQTD);
+            fuzzyEngineRelacionamento.LinguisticVariableCollection.Add(riscoQTD);
+            fuzzyEngineRelacionamento.Consequent = "riscoQTD";
+
+            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule(""));
+            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Baixo) AND (relacionamentoGeralQTD IS Baixo) THEN riscoQTD IS Medio"));
+            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Baixo) AND (relacionamentoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Baixo) AND (relacionamentoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
+            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Medio) AND (relacionamentoGeralQTD IS Baixo) THEN riscoQTD IS Medio"));
+            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Medio) AND (relacionamentoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Medio) AND (relacionamentoGeralQTD IS Alto) THEN riscoQTD IS Medio"));
+            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Alto) AND (relacionamentoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Alto) AND (relacionamentoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Alto) AND (relacionamentoGeralQTD IS Alto) THEN riscoQTD IS Medio"));
+
             Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
             int valorAtual;
 
