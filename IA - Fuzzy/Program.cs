@@ -42,7 +42,7 @@ namespace IA___Fuzzy
             Console.Write("Comunicação: ");
             pessoa.ProporcaoComunicacao = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
 
-            usuarioPessoal = QualificaProporcoesPessoal(pessoa);
+            usuarioPessoal = pessoa;
 
             Console.Clear();
             Console.WriteLine(usuarioPessoal.Nome + ", aguarde enquanto estamos recolhendo as informações dos usuários...");
@@ -72,136 +72,67 @@ namespace IA___Fuzzy
                 };
                 usuarios.Add(usuario);
             }
-            
-            usuarios = QualificaProporcoes(usuarios);
 
             System.Threading.Thread.Sleep(3000);
 
             MontaFuzzy(usuarios);
         }
 
-        public static Usuario MontaUsuario(Usuario usuario)
-        {
-            usuario.RelacionamentoFraco = usuario.ProporcaoRelacionamento >= 0 && usuario.ProporcaoRelacionamento <= 40;
-            usuario.RelacionamentoMedio = usuario.ProporcaoRelacionamento >= 33 & usuario.ProporcaoRelacionamento <= 70;
-            usuario.RelacionamentoForte = usuario.ProporcaoRelacionamento >= 60 & usuario.ProporcaoRelacionamento <= 100;
-
-            usuario.TempoLivreFraco = usuario.ProporcaoTempoLivre >= 0 && usuario.ProporcaoTempoLivre <= 40;
-            usuario.TempoLivreMedio = usuario.ProporcaoTempoLivre >= 33 & usuario.ProporcaoTempoLivre <= 70;
-            usuario.TempoLivreForte = usuario.ProporcaoTempoLivre >= 60 & usuario.ProporcaoTempoLivre <= 100;
-
-            usuario.NotasFraco = usuario.ProporcaoNotas >= 0 && usuario.ProporcaoNotas <= 40;
-            usuario.NotasMedio = usuario.ProporcaoNotas >= 33 & usuario.ProporcaoNotas <= 70;
-            usuario.NotasForte = usuario.ProporcaoNotas >= 60 & usuario.ProporcaoNotas <= 100;
-
-            usuario.ConfiancaFraco = usuario.ProporcaoConfianca >= 0 && usuario.ProporcaoConfianca <= 40;
-            usuario.ConfiancaMedio = usuario.ProporcaoConfianca >= 33 & usuario.ProporcaoConfianca <= 70;
-            usuario.ConfiancaForte = usuario.ProporcaoConfianca >= 60 & usuario.ProporcaoConfianca <= 100;
-
-            usuario.AtividadesComumFraco = usuario.ProporcaoAtividadesComum >= 0 && usuario.ProporcaoAtividadesComum <= 40;
-            usuario.AtividadesComumMedio = usuario.ProporcaoAtividadesComum >= 33 & usuario.ProporcaoAtividadesComum <= 70;
-            usuario.AtividadesComumForte = usuario.ProporcaoAtividadesComum >= 60 & usuario.ProporcaoAtividadesComum <= 100;
-
-            usuario.DominioConteudoFraco = usuario.ProporcaoDominioConteudo >= 0 && usuario.ProporcaoDominioConteudo <= 40;
-            usuario.DominioConteudoMedio = usuario.ProporcaoDominioConteudo >= 33 & usuario.ProporcaoDominioConteudo <= 70;
-            usuario.DominioConteudoForte = usuario.ProporcaoDominioConteudo >= 60 & usuario.ProporcaoDominioConteudo <= 100;
-
-            usuario.DedicacaoFraco = usuario.ProporcaoDedicacao >= 0 && usuario.ProporcaoDedicacao <= 40;
-            usuario.DedicacaoMedio = usuario.ProporcaoDedicacao >= 33 & usuario.ProporcaoDedicacao <= 70;
-            usuario.DedicacaoForte = usuario.ProporcaoDedicacao >= 60 & usuario.ProporcaoDedicacao <= 100;
-
-            usuario.FaltasFraco = usuario.ProporcaoFaltas >= 0 && usuario.ProporcaoFaltas <= 40;
-            usuario.FaltasMedio = usuario.ProporcaoFaltas >= 33 & usuario.ProporcaoFaltas <= 70;
-            usuario.FaltasForte = usuario.ProporcaoFaltas >= 60 & usuario.ProporcaoFaltas <= 100;
-
-            usuario.InteligenciaFraco = usuario.ProporcaoInteligencia >= 0 && usuario.ProporcaoInteligencia <= 40;
-            usuario.InteligenciaMedio = usuario.ProporcaoInteligencia >= 33 & usuario.ProporcaoInteligencia <= 70;
-            usuario.InteligenciaForte = usuario.ProporcaoInteligencia >= 60 & usuario.ProporcaoInteligencia <= 100;
-
-            usuario.ComunicacaoFraco = usuario.ProporcaoComunicacao >= 0 && usuario.ProporcaoComunicacao <= 40;
-            usuario.ComunicacaoMedio = usuario.ProporcaoComunicacao >= 33 & usuario.ProporcaoComunicacao <= 70;
-            usuario.ComunicacaoForte = usuario.ProporcaoComunicacao >= 60 & usuario.ProporcaoComunicacao <= 100;
-
-            return usuario;
-        }
-
-        public static Usuario QualificaProporcoesPessoal(Usuario usuario)
-        {
-            return MontaUsuario(usuario);
-        }
-
-        public static List<Usuario> QualificaProporcoes(List<Usuario> usuarios)
-        {
-            List<Usuario> retorno = new List<Usuario>();
-            foreach (var usuario in usuarios)
-            {
-                retorno.Add(MontaUsuario(usuario));
-            }
-
-            return retorno;
-        }
-
-        /*public static void MontaLogica(string opcao)
-        {
-            Console.Clear();
-            Console.WriteLine("Verificando opção fornecida...");
-
-            switch (opcao)
-            {
-                case "0":
-                    Environment.Exit(1);
-                    break;
-                case "1":
-                    InformaUsuario();
-                    MontaFuzzy(usuarios, opcao);
-                    break;
-                case "2":
-                    InformaUsuario();
-                    MontaFuzzy(usuarios, opcao);
-                    break;
-                case "3":
-                    InformaUsuario();
-                    MontaFuzzy(usuarios, opcao);
-                    break;
-                case "4":
-                    InformaUsuario();
-                    MontaFuzzy(usuarios, opcao);
-                    break;
-                case "5":
-                    InformaUsuario();
-                    MontaFuzzy(usuarios, opcao);
-                    break;
-                default:
-                    MontaMenuErro();
-                    break;
-            }
-        }*/
-
         public static void MontaFuzzy(List<Usuario> usuarios)
         {
             System.Threading.Thread.Sleep(1000);
 
-            Dictionary<Usuario, int> usuariosComMelhoresRelacionamento = CalcularDesempenhoRelacionamento(usuarios);
-            Dictionary<Usuario, int> usuariosComMelhoresTempoLivres = CalcularDesempenhoTempoLivre(usuarios);
-            Dictionary<Usuario, int> usuariosComMelhoresNotas = CalcularDesempenhoNotas(usuarios);
-            Dictionary<Usuario, int> usuariosComMelhoresConfianca = CalcularDesempenhoConfianca(usuarios);
-            Dictionary<Usuario, int> usuariosComMelhoresAtividadesComum = CalcularDesempenhoAtividadesComum(usuarios);
-            Dictionary<Usuario, int> usuariosComMelhoresDominioConteudo = CalcularDesempenhoDominioConteudo(usuarios);
-            Dictionary<Usuario, int> usariosComMelhoresDedicacoes = CalcularDesempenhoDedicacao(usuarios);
-            Dictionary<Usuario, int> usuariosComMelhoresFaltas = CalcularDesempenhoFaltas(usuarios);
-            Dictionary<Usuario, int> usuariosMaisInteligentes = CalcularDesempenhoInteligencia(usuarios);
-            Dictionary<Usuario, int> usuariosMaisComunicativos = CalcularDesempenhoComunicacao(usuarios);
+            Dictionary<Usuario, double> pontuacoes = new Dictionary<Usuario, double>();
+            double Relacionamento, TempoLivre, Notas, Confianca, AtividadesComum;
+            double DominioConteudo, Dedicacao, Faltas, Inteligentes, Comunicativos;
 
-            Dictionary<Usuario, KeyValuePair<Usuario, int>> duplaFinal = MontaMelhorDupla(usuariosComMelhoresRelacionamento, usuariosComMelhoresTempoLivres, usuariosComMelhoresNotas, usuariosComMelhoresConfianca,
-                                                            usuariosComMelhoresAtividadesComum, usuariosComMelhoresDominioConteudo, usariosComMelhoresDedicacoes, usuariosComMelhoresFaltas,
-                                                            usuariosMaisInteligentes, usuariosMaisComunicativos);
+            foreach (var item in usuarios)
+            {
+                Relacionamento = CalcularDesempenhoRelacionamento(usuarioPessoal, item);
+                if (Double.IsNaN(Relacionamento) || Double.IsInfinity(Relacionamento)) Relacionamento = 0;
 
+                TempoLivre = CalcularDesempenhoTempoLivre(usuarioPessoal, item);
+                if (Double.IsNaN(TempoLivre) || Double.IsInfinity(TempoLivre)) TempoLivre = 0;
 
-            var maiorPontuacao = duplaFinal.First().Value.Value;
-            var melhoresUsuarios = duplaFinal.Where(w => w.Value.Value == maiorPontuacao).ToList();
+                Notas = CalcularDesempenhoNotas(usuarioPessoal, item);
+                if (Double.IsNaN(Notas) || Double.IsInfinity(Notas)) Notas = 0;
+
+                Confianca = CalcularDesempenhoConfianca(usuarioPessoal, item);
+                if (Double.IsNaN(Confianca) || Double.IsInfinity(Confianca)) Confianca = 0;
+
+                AtividadesComum = CalcularDesempenhoAtividadesComum(usuarioPessoal, item);
+                if (Double.IsNaN(AtividadesComum) || Double.IsInfinity(AtividadesComum)) AtividadesComum = 0;
+
+                DominioConteudo = CalcularDesempenhoDominioConteudo(usuarioPessoal, item);
+                if (Double.IsNaN(DominioConteudo) || Double.IsInfinity(DominioConteudo)) DominioConteudo = 0;
+
+                Dedicacao = CalcularDesempenhoDedicacao(usuarioPessoal, item);
+                if (Double.IsNaN(Dedicacao) || Double.IsInfinity(Dedicacao)) Dedicacao = 0;
+
+                Faltas = CalcularDesempenhoFaltas(usuarioPessoal, item);
+                if (Double.IsNaN(Faltas) || Double.IsInfinity(Faltas)) Faltas = 0;
+
+                Inteligentes = CalcularDesempenhoInteligencia(usuarioPessoal, item);
+                if (Double.IsNaN(Inteligentes) || Double.IsInfinity(Inteligentes)) Inteligentes = 0;
+
+                Comunicativos = CalcularDesempenhoComunicacao(usuarioPessoal, item);
+                if (Double.IsNaN(Comunicativos) || Double.IsInfinity(Comunicativos)) Comunicativos = 0;
+
+                var media =
+                    (Relacionamento + TempoLivre + Notas + Confianca + AtividadesComum +
+                     AtividadesComum + DominioConteudo + Dedicacao + Faltas + Inteligentes + Comunicativos
+                    ) / 10;
+
+                pontuacoes.Add(item, media);
+            }
+
+            Dictionary<Usuario, KeyValuePair<Usuario, double>> resultado = MontaMelhorDupla(pontuacoes);
+
+            var maiorPontuacao = resultado.First().Value.Value;
+            var melhoresUsuarios = resultado.Where(w => w.Value.Value == maiorPontuacao).ToList();
 
             var nome1 = usuarioPessoal.Nome;
-            var nome2 = duplaFinal.First().Key.Nome;
+            var nome2 = resultado.First().Key.Nome;
 
             Console.Clear();
             Console.WriteLine("");
@@ -229,7 +160,7 @@ namespace IA___Fuzzy
 
         #region Calculo Desempenho        
 
-        private static Dictionary<Usuario, int> CalcularDesempenhoRelacionamento(List<Usuario> usuarios)
+        private static double CalcularDesempenhoRelacionamento(Usuario usuarioPessoal, Usuario usuarioGeral)
         {
             LinguisticVariable RelacionamentoPessoalQTD = new LinguisticVariable("relacionamentoPessoalQTD");
             RelacionamentoPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
@@ -252,7 +183,6 @@ namespace IA___Fuzzy
             fuzzyEngineRelacionamento.LinguisticVariableCollection.Add(riscoQTD);
             fuzzyEngineRelacionamento.Consequent = "riscoQTD";
 
-            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule(""));
             fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Baixo) AND (relacionamentoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
             fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Baixo) AND (relacionamentoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
             fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Baixo) AND (relacionamentoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
@@ -263,1262 +193,367 @@ namespace IA___Fuzzy
             fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Alto) AND (relacionamentoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
             fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Alto) AND (relacionamentoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
 
-            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
-            int valorAtual;
+            RelacionamentoPessoalQTD.InputValue = double.Parse(usuarioPessoal.ProporcaoRelacionamento.ToString());
+            RelacionamentoGeralQTD.InputValue = double.Parse(usuarioGeral.ProporcaoRelacionamento.ToString());
 
-            #region Monta Desempenho            
-
-            foreach (var item in usuarios)
-            {
-                if (usuarioPessoal.RelacionamentoFraco && item.RelacionamentoFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 0);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 0;
-                    }
-                }
-
-                if (usuarioPessoal.RelacionamentoFraco && item.RelacionamentoMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 15);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 15;
-                    }
-                }
-
-                if (usuarioPessoal.RelacionamentoFraco && item.RelacionamentoForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 30);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 30;
-                    }
-                }
-
-                if (usuarioPessoal.RelacionamentoMedio && item.RelacionamentoFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 15);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 15;
-                    }
-                }
-
-                if (usuarioPessoal.RelacionamentoMedio && item.RelacionamentoMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 50);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 50;
-                    }
-                }
-
-                if (usuarioPessoal.RelacionamentoMedio && item.RelacionamentoForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 75);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 75;
-                    }
-                }
-
-                if (usuarioPessoal.RelacionamentoForte && item.RelacionamentoFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 30);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 30;
-                    }
-                }
-
-                if (usuarioPessoal.RelacionamentoForte && item.RelacionamentoMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 75);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 75;
-                    }
-                }
-
-                if (usuarioPessoal.RelacionamentoForte && item.RelacionamentoForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 100);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 100;
-                    }
-                }
-            }
-
-            #endregion
-
-            return dicionario;
+            return fuzzyEngineRelacionamento.Defuzzify();
         }
 
-        private static Dictionary<Usuario, int> CalcularDesempenhoTempoLivre(List<Usuario> usuarios)
+        private static double CalcularDesempenhoTempoLivre(Usuario usuarioPessoal, Usuario usuarioGeral)
         {
-            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
-            int valorAtual;
+            LinguisticVariable TempoLivrePessoalQTD = new LinguisticVariable("tempoLivrePessoalQTD");
+            TempoLivrePessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            TempoLivrePessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            TempoLivrePessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-            #region Monta Desempenho            
+            LinguisticVariable TempoLivreGeralQTD = new LinguisticVariable("tempoLivreGeralQTD");
+            TempoLivreGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            TempoLivreGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            TempoLivreGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-            foreach (var item in usuarios)
-            {
-                if (usuarioPessoal.TempoLivreFraco && item.TempoLivreFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 0);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 0;
-                    }
-                }
+            LinguisticVariable riscoQTD = new LinguisticVariable("riscoQTD");
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-                if (usuarioPessoal.TempoLivreFraco && item.TempoLivreMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 15);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 15;
-                    }
-                }
+            FuzzyEngine fuzzyEngineTempoLivre = new FuzzyEngine();
+            fuzzyEngineTempoLivre.LinguisticVariableCollection.Add(TempoLivrePessoalQTD);
+            fuzzyEngineTempoLivre.LinguisticVariableCollection.Add(TempoLivreGeralQTD);
+            fuzzyEngineTempoLivre.LinguisticVariableCollection.Add(riscoQTD);
+            fuzzyEngineTempoLivre.Consequent = "riscoQTD";
 
-                if (usuarioPessoal.TempoLivreFraco && item.TempoLivreForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 30);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 30;
-                    }
-                }
+            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Baixo) AND (tempoLivreGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Baixo) AND (tempoLivreGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Baixo) AND (tempoLivreGeralQTD IS Alto) THEN riscoQTD IS Alto"));
+            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Medio) AND (tempoLivreGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Medio) AND (tempoLivreGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Medio) AND (tempoLivreGeralQTD IS Alto) THEN riscoQTD IS Alto"));
+            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Alto) AND (tempoLivreGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Alto) AND (tempoLivreGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Alto) AND (tempoLivreGeralQTD IS Alto) THEN riscoQTD IS Alto"));
 
-                if (usuarioPessoal.TempoLivreMedio && item.TempoLivreFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 15);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 15;
-                    }
-                }
+            TempoLivrePessoalQTD.InputValue = double.Parse(usuarioPessoal.ProporcaoTempoLivre.ToString());
+            TempoLivreGeralQTD.InputValue = double.Parse(usuarioGeral.ProporcaoTempoLivre.ToString());
 
-                if (usuarioPessoal.TempoLivreMedio && item.TempoLivreMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 50);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 50;
-                    }
-                }
-
-                if (usuarioPessoal.TempoLivreMedio && item.TempoLivreForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 75);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 75;
-                    }
-                }
-
-                if (usuarioPessoal.TempoLivreForte && item.TempoLivreFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 30);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 30;
-                    }
-                }
-
-                if (usuarioPessoal.TempoLivreForte && item.TempoLivreMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 75);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 75;
-                    }
-                }
-
-                if (usuarioPessoal.TempoLivreForte && item.TempoLivreForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 100);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 100;
-                    }
-                }
-            }
-
-            #endregion
-
-            return dicionario;
+            return fuzzyEngineTempoLivre.Defuzzify();
         }
 
-        private static Dictionary<Usuario, int> CalcularDesempenhoNotas(List<Usuario> usuarios)
+        private static double CalcularDesempenhoNotas(Usuario usuarioPessoal, Usuario usuarioGeral)
         {
-            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
-            int valorAtual;
+            LinguisticVariable NotasPessoalQTD = new LinguisticVariable("notasPessoalQTD");
+            NotasPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            NotasPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            NotasPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-            #region Monta Desempenho            
+            LinguisticVariable NotasGeralQTD = new LinguisticVariable("notasGeralQTD");
+            NotasGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            NotasGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            NotasGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-            foreach (var item in usuarios)
-            {
-                if (usuarioPessoal.NotasFraco && item.NotasFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 0);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 0;
-                    }
-                }
+            LinguisticVariable riscoQTD = new LinguisticVariable("riscoQTD");
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-                if (usuarioPessoal.NotasFraco && item.NotasMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 15);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 15;
-                    }
-                }
+            FuzzyEngine fuzzyEngineNotas = new FuzzyEngine();
+            fuzzyEngineNotas.LinguisticVariableCollection.Add(NotasPessoalQTD);
+            fuzzyEngineNotas.LinguisticVariableCollection.Add(NotasGeralQTD);
+            fuzzyEngineNotas.LinguisticVariableCollection.Add(riscoQTD);
+            fuzzyEngineNotas.Consequent = "riscoQTD";
 
-                if (usuarioPessoal.NotasFraco && item.NotasForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 30);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 30;
-                    }
-                }
+            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Baixo) AND (notasGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Baixo) AND (notasGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Baixo) AND (notasGeralQTD IS Alto) THEN riscoQTD IS Alto"));
+            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Medio) AND (notasGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Medio) AND (notasGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Medio) AND (notasGeralQTD IS Alto) THEN riscoQTD IS Alto"));
+            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Alto) AND (notasGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Alto) AND (notasGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Alto) AND (notasGeralQTD IS Alto) THEN riscoQTD IS Alto"));
 
-                if (usuarioPessoal.NotasMedio && item.NotasFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 15);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 15;
-                    }
-                }
+            NotasPessoalQTD.InputValue = double.Parse(usuarioPessoal.ProporcaoNotas.ToString());
+            NotasGeralQTD.InputValue = double.Parse(usuarioGeral.ProporcaoNotas.ToString());
 
-                if (usuarioPessoal.NotasMedio && item.NotasMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 50);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 50;
-                    }
-                }
-
-                if (usuarioPessoal.NotasMedio && item.NotasForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 75);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 75;
-                    }
-                }
-
-                if (usuarioPessoal.NotasForte && item.NotasFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 30);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 30;
-                    }
-                }
-
-                if (usuarioPessoal.NotasForte && item.NotasMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 75);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 75;
-                    }
-                }
-
-                if (usuarioPessoal.NotasForte && item.NotasForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 100);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 100;
-                    }
-                }
-            }
-
-            #endregion
-
-            return dicionario;
+            return fuzzyEngineNotas.Defuzzify();
         }
 
-        private static Dictionary<Usuario, int> CalcularDesempenhoConfianca(List<Usuario> usuarios)
+        private static double CalcularDesempenhoConfianca(Usuario usuarioPessoal, Usuario usuarioGeral)
         {
-            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
-            int valorAtual;
+            LinguisticVariable ConfiancaPessoalQTD = new LinguisticVariable("confiancaPessoalQTD");
+            ConfiancaPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            ConfiancaPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            ConfiancaPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-            #region Monta Desempenho            
+            LinguisticVariable ConfiancaGeralQTD = new LinguisticVariable("confiancaGeralQTD");
+            ConfiancaGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            ConfiancaGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            ConfiancaGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-            foreach (var item in usuarios)
-            {
-                if (usuarioPessoal.ConfiancaFraco && item.ConfiancaFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 0);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 0;
-                    }
-                }
+            LinguisticVariable riscoQTD = new LinguisticVariable("riscoQTD");
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-                if (usuarioPessoal.ConfiancaFraco && item.ConfiancaMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 15);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 15;
-                    }
-                }
+            FuzzyEngine fuzzyEngineConfianca = new FuzzyEngine();
+            fuzzyEngineConfianca.LinguisticVariableCollection.Add(ConfiancaPessoalQTD);
+            fuzzyEngineConfianca.LinguisticVariableCollection.Add(ConfiancaGeralQTD);
+            fuzzyEngineConfianca.LinguisticVariableCollection.Add(riscoQTD);
+            fuzzyEngineConfianca.Consequent = "riscoQTD";
 
-                if (usuarioPessoal.ConfiancaFraco && item.ConfiancaForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 30);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 30;
-                    }
-                }
+            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Baixo) AND (confiancaGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Baixo) AND (confiancaGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Baixo) AND (confiancaGeralQTD IS Alto) THEN riscoQTD IS Alto"));
+            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Medio) AND (confiancaGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Medio) AND (confiancaGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Medio) AND (confiancaGeralQTD IS Alto) THEN riscoQTD IS Alto"));
+            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Alto) AND (confiancaGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Alto) AND (confiancaGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Alto) AND (confiancaGeralQTD IS Alto) THEN riscoQTD IS Alto"));
 
-                if (usuarioPessoal.ConfiancaMedio && item.ConfiancaFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 15);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 15;
-                    }
-                }
+            ConfiancaPessoalQTD.InputValue = double.Parse(usuarioPessoal.ProporcaoConfianca.ToString());
+            ConfiancaGeralQTD.InputValue = double.Parse(usuarioGeral.ProporcaoConfianca.ToString());
 
-                if (usuarioPessoal.ConfiancaMedio && item.ConfiancaMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 50);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 50;
-                    }
-                }
-
-                if (usuarioPessoal.ConfiancaMedio && item.ConfiancaForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 75);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 75;
-                    }
-                }
-
-                if (usuarioPessoal.ConfiancaForte && item.ConfiancaFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 30);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 30;
-                    }
-                }
-
-                if (usuarioPessoal.ConfiancaForte && item.ConfiancaMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 75);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 75;
-                    }
-                }
-
-                if (usuarioPessoal.ConfiancaForte && item.ConfiancaForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 100);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 100;
-                    }
-                }
-            }
-
-            #endregion
-
-            return dicionario;
+            return fuzzyEngineConfianca.Defuzzify();
         }
 
-        private static Dictionary<Usuario, int> CalcularDesempenhoAtividadesComum(List<Usuario> usuarios)
+        private static double CalcularDesempenhoAtividadesComum(Usuario usuarioPessoal, Usuario usuarioGeral)
         {
-            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
-            int valorAtual;
+            LinguisticVariable AtividadesComumPessoalQTD = new LinguisticVariable("atividadesComumPessoalQTD");
+            AtividadesComumPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            AtividadesComumPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            AtividadesComumPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-            #region Monta Desempenho            
+            LinguisticVariable AtividadesComumGeralQTD = new LinguisticVariable("atividadesComumGeralQTD");
+            AtividadesComumGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            AtividadesComumGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            AtividadesComumGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-            foreach (var item in usuarios)
-            {
-                if (usuarioPessoal.AtividadesComumFraco && item.AtividadesComumFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 0);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 0;
-                    }
-                }
+            LinguisticVariable riscoQTD = new LinguisticVariable("riscoQTD");
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-                if (usuarioPessoal.AtividadesComumFraco && item.AtividadesComumMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 15);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 15;
-                    }
-                }
+            FuzzyEngine fuzzyEngineAtividadesComum = new FuzzyEngine();
+            fuzzyEngineAtividadesComum.LinguisticVariableCollection.Add(AtividadesComumPessoalQTD);
+            fuzzyEngineAtividadesComum.LinguisticVariableCollection.Add(AtividadesComumGeralQTD);
+            fuzzyEngineAtividadesComum.LinguisticVariableCollection.Add(riscoQTD);
+            fuzzyEngineAtividadesComum.Consequent = "riscoQTD";
 
-                if (usuarioPessoal.AtividadesComumFraco && item.AtividadesComumForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 30);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 30;
-                    }
-                }
+            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Baixo) AND (atividadesComumGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Baixo) AND (atividadesComumGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Baixo) AND (atividadesComumGeralQTD IS Alto) THEN riscoQTD IS Alto"));
+            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Medio) AND (atividadesComumGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Medio) AND (atividadesComumGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Medio) AND (atividadesComumGeralQTD IS Alto) THEN riscoQTD IS Alto"));
+            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Alto) AND (atividadesComumGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Alto) AND (atividadesComumGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Alto) AND (atividadesComumGeralQTD IS Alto) THEN riscoQTD IS Alto"));
 
-                if (usuarioPessoal.AtividadesComumMedio && item.AtividadesComumFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 15);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 15;
-                    }
-                }
+            AtividadesComumPessoalQTD.InputValue = double.Parse(usuarioPessoal.ProporcaoAtividadesComum.ToString());
+            AtividadesComumGeralQTD.InputValue = double.Parse(usuarioGeral.ProporcaoAtividadesComum.ToString());
 
-                if (usuarioPessoal.AtividadesComumMedio && item.AtividadesComumMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 50);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 50;
-                    }
-                }
-
-                if (usuarioPessoal.AtividadesComumMedio && item.AtividadesComumForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 75);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 75;
-                    }
-                }
-
-                if (usuarioPessoal.AtividadesComumForte && item.AtividadesComumFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 30);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 30;
-                    }
-                }
-
-                if (usuarioPessoal.AtividadesComumForte && item.AtividadesComumMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 75);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 75;
-                    }
-                }
-
-                if (usuarioPessoal.AtividadesComumForte && item.AtividadesComumForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 100);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 100;
-                    }
-                }
-            }
-
-            #endregion
-
-            return dicionario;
+            return fuzzyEngineAtividadesComum.Defuzzify();
         }
 
-        private static Dictionary<Usuario, int> CalcularDesempenhoDominioConteudo(List<Usuario> usuarios)
+        private static double CalcularDesempenhoDominioConteudo(Usuario usuarioPessoal, Usuario usuarioGeral)
         {
-            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
-            int valorAtual;
+            LinguisticVariable DominioConteudoPessoalQTD = new LinguisticVariable("dominioConteudoPessoalQTD");
+            DominioConteudoPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            DominioConteudoPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            DominioConteudoPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-            #region Monta Desempenho            
+            LinguisticVariable DominioConteudoGeralQTD = new LinguisticVariable("dominioConteudoGeralQTD");
+            DominioConteudoGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            DominioConteudoGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            DominioConteudoGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-            foreach (var item in usuarios)
-            {
-                if (usuarioPessoal.DominioConteudoFraco && item.DominioConteudoFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 0);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 0;
-                    }
-                }
+            LinguisticVariable riscoQTD = new LinguisticVariable("riscoQTD");
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-                if (usuarioPessoal.DominioConteudoFraco && item.DominioConteudoMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 15);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 15;
-                    }
-                }
+            FuzzyEngine fuzzyEngineDominioConteudo = new FuzzyEngine();
+            fuzzyEngineDominioConteudo.LinguisticVariableCollection.Add(DominioConteudoPessoalQTD);
+            fuzzyEngineDominioConteudo.LinguisticVariableCollection.Add(DominioConteudoGeralQTD);
+            fuzzyEngineDominioConteudo.LinguisticVariableCollection.Add(riscoQTD);
+            fuzzyEngineDominioConteudo.Consequent = "riscoQTD";
 
-                if (usuarioPessoal.DominioConteudoFraco && item.DominioConteudoForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 30);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 30;
-                    }
-                }
+            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Baixo) AND (dominioConteudoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Baixo) AND (dominioConteudoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Baixo) AND (dominioConteudoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
+            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Medio) AND (dominioConteudoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Medio) AND (dominioConteudoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Medio) AND (dominioConteudoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
+            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Alto) AND (dominioConteudoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Alto) AND (dominioConteudoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Alto) AND (dominioConteudoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
 
-                if (usuarioPessoal.DominioConteudoMedio && item.DominioConteudoFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 15);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 15;
-                    }
-                }
+            DominioConteudoPessoalQTD.InputValue = double.Parse(usuarioPessoal.ProporcaoDominioConteudo.ToString());
+            DominioConteudoGeralQTD.InputValue = double.Parse(usuarioGeral.ProporcaoDominioConteudo.ToString());
 
-                if (usuarioPessoal.DominioConteudoMedio && item.DominioConteudoMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 50);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 50;
-                    }
-                }
-
-                if (usuarioPessoal.DominioConteudoMedio && item.DominioConteudoForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 75);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 75;
-                    }
-                }
-
-                if (usuarioPessoal.DominioConteudoForte && item.DominioConteudoFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 30);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 30;
-                    }
-                }
-
-                if (usuarioPessoal.DominioConteudoForte && item.DominioConteudoMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 75);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 75;
-                    }
-                }
-
-                if (usuarioPessoal.DominioConteudoForte && item.DominioConteudoForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 100);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 100;
-                    }
-                }
-            }
-
-            #endregion
-
-            return dicionario;
+            return fuzzyEngineDominioConteudo.Defuzzify();
         }
 
-        private static Dictionary<Usuario, int> CalcularDesempenhoDedicacao(List<Usuario> usuarios)
+        private static double CalcularDesempenhoDedicacao(Usuario usuarioPessoal, Usuario usuarioGeral)
         {
-            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
-            int valorAtual;
+            LinguisticVariable DedicacaoPessoalQTD = new LinguisticVariable("dedicacaoPessoalQTD");
+            DedicacaoPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            DedicacaoPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            DedicacaoPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-            #region Monta Desempenho            
+            LinguisticVariable DedicacaoGeralQTD = new LinguisticVariable("dedicacaoGeralQTD");
+            DedicacaoGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            DedicacaoGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            DedicacaoGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-            foreach (var item in usuarios)
-            {
-                if (usuarioPessoal.DedicacaoFraco && item.DedicacaoFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 0);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 0;
-                    }
-                }
+            LinguisticVariable riscoQTD = new LinguisticVariable("riscoQTD");
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-                if (usuarioPessoal.DedicacaoFraco && item.DedicacaoMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 15);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 15;
-                    }
-                }
+            FuzzyEngine fuzzyEngineDedicacao = new FuzzyEngine();
+            fuzzyEngineDedicacao.LinguisticVariableCollection.Add(DedicacaoPessoalQTD);
+            fuzzyEngineDedicacao.LinguisticVariableCollection.Add(DedicacaoGeralQTD);
+            fuzzyEngineDedicacao.LinguisticVariableCollection.Add(riscoQTD);
+            fuzzyEngineDedicacao.Consequent = "riscoQTD";
 
-                if (usuarioPessoal.DedicacaoFraco && item.DedicacaoForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 30);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 30;
-                    }
-                }
+            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Baixo) AND (dedicacaoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Baixo) AND (dedicacaoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Baixo) AND (dedicacaoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
+            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Medio) AND (dedicacaoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Medio) AND (dedicacaoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Medio) AND (dedicacaoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
+            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Alto) AND (dedicacaoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Alto) AND (dedicacaoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Alto) AND (dedicacaoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
 
-                if (usuarioPessoal.DedicacaoMedio && item.DedicacaoFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 15);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 15;
-                    }
-                }
+            DedicacaoPessoalQTD.InputValue = double.Parse(usuarioPessoal.ProporcaoDedicacao.ToString());
+            DedicacaoGeralQTD.InputValue = double.Parse(usuarioGeral.ProporcaoDedicacao.ToString());
 
-                if (usuarioPessoal.DedicacaoMedio && item.DedicacaoMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 50);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 50;
-                    }
-                }
-
-                if (usuarioPessoal.DedicacaoMedio && item.DedicacaoForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 75);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 75;
-                    }
-                }
-
-                if (usuarioPessoal.DedicacaoForte && item.DedicacaoFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 30);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 30;
-                    }
-                }
-
-                if (usuarioPessoal.DedicacaoForte && item.DedicacaoMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 75);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 75;
-                    }
-                }
-
-                if (usuarioPessoal.DedicacaoForte && item.DedicacaoForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 100);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 100;
-                    }
-                }
-            }
-
-            #endregion
-
-            return dicionario;
+            return fuzzyEngineDedicacao.Defuzzify();
         }
 
-        private static Dictionary<Usuario, int> CalcularDesempenhoFaltas(List<Usuario> usuarios)
+        private static double CalcularDesempenhoFaltas(Usuario usuarioPessoal, Usuario usuarioGeral)
         {
-            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
-            int valorAtual;
+            LinguisticVariable FaltasPessoalQTD = new LinguisticVariable("faltasPessoalQTD");
+            FaltasPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            FaltasPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            FaltasPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-            #region Monta Desempenho            
+            LinguisticVariable FaltasGeralQTD = new LinguisticVariable("faltasGeralQTD");
+            FaltasGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            FaltasGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            FaltasGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-            foreach (var item in usuarios)
-            {
-                if (usuarioPessoal.FaltasFraco && item.FaltasFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 0);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 0;
-                    }
-                }
+            LinguisticVariable riscoQTD = new LinguisticVariable("riscoQTD");
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-                if (usuarioPessoal.FaltasFraco && item.FaltasMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 15);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 15;
-                    }
-                }
+            FuzzyEngine fuzzyEngineFaltas = new FuzzyEngine();
+            fuzzyEngineFaltas.LinguisticVariableCollection.Add(FaltasPessoalQTD);
+            fuzzyEngineFaltas.LinguisticVariableCollection.Add(FaltasGeralQTD);
+            fuzzyEngineFaltas.LinguisticVariableCollection.Add(riscoQTD);
+            fuzzyEngineFaltas.Consequent = "riscoQTD";
 
-                if (usuarioPessoal.FaltasFraco && item.FaltasForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 30);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 30;
-                    }
-                }
+            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Baixo) AND (faltasGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Baixo) AND (faltasGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Baixo) AND (faltasGeralQTD IS Alto) THEN riscoQTD IS Alto"));
+            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Medio) AND (faltasGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Medio) AND (faltasGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Medio) AND (faltasGeralQTD IS Alto) THEN riscoQTD IS Alto"));
+            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Alto) AND (faltasGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Alto) AND (faltasGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Alto) AND (faltasGeralQTD IS Alto) THEN riscoQTD IS Alto"));
 
-                if (usuarioPessoal.FaltasMedio && item.FaltasFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 15);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 15;
-                    }
-                }
+            FaltasPessoalQTD.InputValue = double.Parse(usuarioPessoal.ProporcaoFaltas.ToString());
+            FaltasGeralQTD.InputValue = double.Parse(usuarioGeral.ProporcaoFaltas.ToString());
 
-                if (usuarioPessoal.FaltasMedio && item.FaltasMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 50);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 50;
-                    }
-                }
-
-                if (usuarioPessoal.FaltasMedio && item.FaltasForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 75);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 75;
-                    }
-                }
-
-                if (usuarioPessoal.FaltasForte && item.FaltasFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 30);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 30;
-                    }
-                }
-
-                if (usuarioPessoal.FaltasForte && item.FaltasMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 75);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 75;
-                    }
-                }
-
-                if (usuarioPessoal.FaltasForte && item.FaltasForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 100);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 100;
-                    }
-                }
-            }
-
-            #endregion
-
-            return dicionario;
+            return fuzzyEngineFaltas.Defuzzify();
         }
 
-        private static Dictionary<Usuario, int> CalcularDesempenhoInteligencia(List<Usuario> usuarios)
+        private static double CalcularDesempenhoInteligencia(Usuario usuarioPessoal, Usuario usuarioGeral)
         {
-            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
-            int valorAtual;
+            LinguisticVariable InteligenciaPessoalQTD = new LinguisticVariable("inteligenciaPessoalQTD");
+            InteligenciaPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            InteligenciaPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            InteligenciaPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-            #region Monta Desempenho            
+            LinguisticVariable InteligenciaGeralQTD = new LinguisticVariable("inteligenciaGeralQTD");
+            InteligenciaGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            InteligenciaGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            InteligenciaGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-            foreach (var item in usuarios)
-            {
-                if (usuarioPessoal.InteligenciaFraco && item.InteligenciaFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 0);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 0;
-                    }
-                }
+            LinguisticVariable riscoQTD = new LinguisticVariable("riscoQTD");
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-                if (usuarioPessoal.InteligenciaFraco && item.InteligenciaMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 15);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 15;
-                    }
-                }
+            FuzzyEngine fuzzyEngineInteligencia = new FuzzyEngine();
+            fuzzyEngineInteligencia.LinguisticVariableCollection.Add(InteligenciaPessoalQTD);
+            fuzzyEngineInteligencia.LinguisticVariableCollection.Add(InteligenciaGeralQTD);
+            fuzzyEngineInteligencia.LinguisticVariableCollection.Add(riscoQTD);
+            fuzzyEngineInteligencia.Consequent = "riscoQTD";
 
-                if (usuarioPessoal.InteligenciaFraco && item.InteligenciaForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 30);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 30;
-                    }
-                }
+            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Baixo) AND (inteligenciaGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Baixo) AND (inteligenciaGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Baixo) AND (inteligenciaGeralQTD IS Alto) THEN riscoQTD IS Alto"));
+            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Medio) AND (inteligenciaGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Medio) AND (inteligenciaGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Medio) AND (inteligenciaGeralQTD IS Alto) THEN riscoQTD IS Alto"));
+            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Alto) AND (inteligenciaGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Alto) AND (inteligenciaGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Alto) AND (inteligenciaGeralQTD IS Alto) THEN riscoQTD IS Alto"));
 
-                if (usuarioPessoal.InteligenciaMedio && item.InteligenciaFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 15);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 15;
-                    }
-                }
+            InteligenciaPessoalQTD.InputValue = double.Parse(usuarioPessoal.ProporcaoInteligencia.ToString());
+            InteligenciaGeralQTD.InputValue = double.Parse(usuarioGeral.ProporcaoInteligencia.ToString());
 
-                if (usuarioPessoal.InteligenciaMedio && item.InteligenciaMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 50);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 50;
-                    }
-                }
-
-                if (usuarioPessoal.InteligenciaMedio && item.InteligenciaForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 75);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 75;
-                    }
-                }
-
-                if (usuarioPessoal.InteligenciaForte && item.InteligenciaFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 30);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 30;
-                    }
-                }
-
-                if (usuarioPessoal.InteligenciaForte && item.InteligenciaMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 75);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 75;
-                    }
-                }
-
-                if (usuarioPessoal.InteligenciaForte && item.InteligenciaForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 100);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 100;
-                    }
-                }
-            }
-
-            #endregion
-
-            return dicionario;
+            return fuzzyEngineInteligencia.Defuzzify();
         }
 
-        private static Dictionary<Usuario, int> CalcularDesempenhoComunicacao(List<Usuario> usuarios)
+        private static double CalcularDesempenhoComunicacao(Usuario usuarioPessoal, Usuario usuarioGeral)
         {
-            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
-            int valorAtual;
+            LinguisticVariable ComunicacaoPessoalQTD = new LinguisticVariable("comunicacaoPessoalQTD");
+            ComunicacaoPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            ComunicacaoPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            ComunicacaoPessoalQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-            #region Monta Desempenho            
+            LinguisticVariable ComunicacaoGeralQTD = new LinguisticVariable("comunicacaoGeralQTD");
+            ComunicacaoGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            ComunicacaoGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            ComunicacaoGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-            foreach (var item in usuarios)
-            {
-                if (usuarioPessoal.ComunicacaoFraco && item.ComunicacaoFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 0);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 0;
-                    }
-                }
+            LinguisticVariable riscoQTD = new LinguisticVariable("riscoQTD");
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
-                if (usuarioPessoal.ComunicacaoFraco && item.ComunicacaoMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 15);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 15;
-                    }
-                }
+            FuzzyEngine fuzzyEngineComunicacao = new FuzzyEngine();
+            fuzzyEngineComunicacao.LinguisticVariableCollection.Add(ComunicacaoPessoalQTD);
+            fuzzyEngineComunicacao.LinguisticVariableCollection.Add(ComunicacaoGeralQTD);
+            fuzzyEngineComunicacao.LinguisticVariableCollection.Add(riscoQTD);
+            fuzzyEngineComunicacao.Consequent = "riscoQTD";
 
-                if (usuarioPessoal.ComunicacaoFraco && item.ComunicacaoForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 30);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 30;
-                    }
-                }
+            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Baixo) AND (comunicacaoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Baixo) AND (comunicacaoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Baixo) AND (comunicacaoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
+            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Medio) AND (comunicacaoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Medio) AND (comunicacaoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Medio) AND (comunicacaoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
+            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Alto) AND (comunicacaoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Alto) AND (comunicacaoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Alto) AND (comunicacaoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
 
-                if (usuarioPessoal.ComunicacaoMedio && item.ComunicacaoFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 15);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 15;
-                    }
-                }
+            ComunicacaoPessoalQTD.InputValue = double.Parse(usuarioPessoal.ProporcaoComunicacao.ToString());
+            ComunicacaoGeralQTD.InputValue = double.Parse(usuarioGeral.ProporcaoComunicacao.ToString());
 
-                if (usuarioPessoal.ComunicacaoMedio && item.ComunicacaoMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 50);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 50;
-                    }
-                }
-
-                if (usuarioPessoal.ComunicacaoMedio && item.ComunicacaoForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 75);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 75;
-                    }
-                }
-
-                if (usuarioPessoal.ComunicacaoForte && item.ComunicacaoFraco)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 30);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 30;
-                    }
-                }
-
-                if (usuarioPessoal.ComunicacaoForte && item.ComunicacaoMedio)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 75);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 75;
-                    }
-                }
-
-                if (usuarioPessoal.ComunicacaoForte && item.ComunicacaoForte)
-                {
-                    if (!dicionario.ContainsKey(item))
-                        dicionario.Add(item, 100);
-                    else
-                    {
-                        if (dicionario.TryGetValue(item, out valorAtual))
-                            dicionario[item] = valorAtual + 100;
-                    }
-                }
-            }
-
-            #endregion
-
-            return dicionario;
+            return fuzzyEngineComunicacao.Defuzzify();
         }
 
 
-        private static Dictionary<Usuario, KeyValuePair<Usuario, int>> MontaMelhorDupla(
-                                                        Dictionary<Usuario, int> usuariosComMelhoresRelacionamento, Dictionary<Usuario, int> usuariosComMelhoresTempoLivres,
-                                                        Dictionary<Usuario, int> usuariosComMelhoresNotas, Dictionary<Usuario, int> usuariosComMelhoresConfianca,
-                                                        Dictionary<Usuario, int> usuariosComMelhoresAtividadesComum, Dictionary<Usuario, int> usuariosComMelhoresDominioConteudo,
-                                                        Dictionary<Usuario, int> usariosComMelhoresDedicacoes, Dictionary<Usuario, int> usuariosComMelhoresFaltas,
-                                                        Dictionary<Usuario, int> usuariosMaisInteligentes, Dictionary<Usuario, int> usuariosMaisComunicativos)
+        private static Dictionary<Usuario, KeyValuePair<Usuario, double>> MontaMelhorDupla(Dictionary<Usuario, double> pontuacoes)
         {
-            Dictionary<Usuario, int> dicionario = new Dictionary<Usuario, int>();
-            int valorAtual;
-
-            #region Junção dos Resultados
-
-            foreach (var item in usuariosComMelhoresRelacionamento)
-                dicionario.Add(item.Key, item.Value);
-
-            foreach (var item in usuariosComMelhoresTempoLivres)
-            {
-                if (!dicionario.ContainsKey(item.Key))
-                    dicionario.Add(item.Key, item.Value);
-                else
-                {
-                    if (dicionario.TryGetValue(item.Key, out valorAtual))
-                        dicionario[item.Key] = valorAtual + item.Value;
-                }
-            }
-
-            foreach (var item in usuariosComMelhoresNotas)
-            {
-                if (!dicionario.ContainsKey(item.Key))
-                    dicionario.Add(item.Key, item.Value);
-                else
-                {
-                    if (dicionario.TryGetValue(item.Key, out valorAtual))
-                        dicionario[item.Key] = valorAtual + item.Value;
-                }
-            }
-
-            foreach (var item in usuariosComMelhoresConfianca)
-            {
-                if (!dicionario.ContainsKey(item.Key))
-                    dicionario.Add(item.Key, item.Value);
-                else
-                {
-                    if (dicionario.TryGetValue(item.Key, out valorAtual))
-                        dicionario[item.Key] = valorAtual + item.Value;
-                }
-            }
-
-            foreach (var item in usuariosComMelhoresAtividadesComum)
-            {
-                if (!dicionario.ContainsKey(item.Key))
-                    dicionario.Add(item.Key, item.Value);
-                else
-                {
-                    if (dicionario.TryGetValue(item.Key, out valorAtual))
-                        dicionario[item.Key] = valorAtual + item.Value;
-                }
-            }
-
-            foreach (var item in usuariosComMelhoresDominioConteudo)
-            {
-                if (!dicionario.ContainsKey(item.Key))
-                    dicionario.Add(item.Key, item.Value);
-                else
-                {
-                    if (dicionario.TryGetValue(item.Key, out valorAtual))
-                        dicionario[item.Key] = valorAtual + item.Value;
-                }
-            }
-
-            foreach (var item in usariosComMelhoresDedicacoes)
-            {
-                if (!dicionario.ContainsKey(item.Key))
-                    dicionario.Add(item.Key, item.Value);
-                else
-                {
-                    if (dicionario.TryGetValue(item.Key, out valorAtual))
-                        dicionario[item.Key] = valorAtual + item.Value;
-                }
-            }
-
-            foreach (var item in usuariosComMelhoresFaltas)
-            {
-                if (!dicionario.ContainsKey(item.Key))
-                    dicionario.Add(item.Key, item.Value);
-                else
-                {
-                    if (dicionario.TryGetValue(item.Key, out valorAtual))
-                        dicionario[item.Key] = valorAtual + item.Value;
-                }
-            }
-
-            foreach (var item in usuariosMaisInteligentes)
-            {
-                if (!dicionario.ContainsKey(item.Key))
-                    dicionario.Add(item.Key, item.Value);
-                else
-                {
-                    if (dicionario.TryGetValue(item.Key, out valorAtual))
-                        dicionario[item.Key] = valorAtual + item.Value;
-                }
-            }
-
-            foreach (var item in usuariosMaisComunicativos)
-            {
-                if (!dicionario.ContainsKey(item.Key))
-                    dicionario.Add(item.Key, item.Value);
-                else
-                {
-                    if (dicionario.TryGetValue(item.Key, out valorAtual))
-                        dicionario[item.Key] = valorAtual + item.Value;
-                }
-            }
-
-            #endregion
-
-            return dicionario.OrderByDescending(o => o.Value).ToDictionary(o => o.Key);
+            return pontuacoes.OrderByDescending(o => o.Value).ToDictionary(o => o.Key);
         }
 
         #endregion
@@ -1541,8 +576,6 @@ namespace IA___Fuzzy
             Console.WriteLine("");
             Console.Write("SUA OPÇÃO: ");
             var opcao = Console.ReadLine();
-
-            //MontaLogica(opcao);
         }
 
         public static void MontaMenuErro()
@@ -1576,33 +609,32 @@ namespace IA___Fuzzy
 
         public static void MontaMenuFinal()
         {
-            {
-                Console.Clear();
-                Console.WriteLine("Parabéns, agora você tem a melhor dupla possível para a realização do trabalho. Aproveite!");
-                Console.WriteLine("");
-                Console.WriteLine("╔════════════════════════════════════════╗");
-                Console.WriteLine("║ \tDeseja refazer o cálculo?        ║");
-                Console.WriteLine("║ 1. Sim me leva até lá!                 ║");
-                Console.WriteLine("║ 0. Não, sair.                          ║");
-                Console.WriteLine("╚════════════════════════════════════════╝");
-                Console.WriteLine("");
-                Console.Write("SUA OPÇÃO: ");
-                var opcao = Console.ReadLine();
+            Console.Clear();
+            Console.WriteLine("Parabéns, agora você tem a melhor dupla possível para a realização do trabalho. Aproveite!");
+            Console.WriteLine("");
+            Console.WriteLine("╔════════════════════════════════════════╗");
+            Console.WriteLine("║ \tDeseja refazer o cálculo?        ║");
+            Console.WriteLine("║ 1. Sim me leva até lá!                 ║");
+            Console.WriteLine("║ 0. Não, sair.                          ║");
+            Console.WriteLine("╚════════════════════════════════════════╝");
+            Console.WriteLine("");
+            Console.Write("SUA OPÇÃO: ");
+            var opcao = Console.ReadLine();
 
-                switch (opcao)
-                {
-                    case "0":
-                        Environment.Exit(1);
-                        break;
-                    case "1":
-                        Console.Clear();
-                        Main(new string[] { "teste"});
-                        break;
-                    default:
-                        MontaMenuErro();
-                        break;
-                }
+            switch (opcao)
+            {
+                case "0":
+                    Environment.Exit(1);
+                    break;
+                case "1":
+                    Console.Clear();
+                    Main(new string[] { "teste" });
+                    break;
+                default:
+                    MontaMenuErro();
+                    break;
             }
+
         }
 
         public static void InformaUsuario()

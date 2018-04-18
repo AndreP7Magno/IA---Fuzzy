@@ -1,7 +1,4 @@
-﻿using DotFuzzy;
-
-
-namespace IA___Fuzzy.Domain
+﻿namespace IA___Fuzzy.Domain
 {
     public class Usuario
     {
@@ -17,47 +14,5 @@ namespace IA___Fuzzy.Domain
         public int? ProporcaoFaltas { get; set; }
         public int? ProporcaoInteligencia { get; set; }
         public int? ProporcaoComunicacao { get; set; }
-
-        public bool RelacionamentoFraco { get; set; }
-        public bool RelacionamentoMedio { get; set; }
-        public bool RelacionamentoForte { get; set; }
-
-        public bool TempoLivreFraco { get; set; }
-        public bool TempoLivreMedio { get; set; }
-        public bool TempoLivreForte { get; set; }
-
-        public bool NotasFraco { get; set; }
-        public bool NotasMedio { get; set; }
-        public bool NotasForte { get; set; }
-
-        public bool ConfiancaFraco { get; set; }
-        public bool ConfiancaMedio { get; set; }
-        public bool ConfiancaForte { get; set; }
-
-        public bool AtividadesComumFraco { get; set; }
-        public bool AtividadesComumMedio { get; set; }
-        public bool AtividadesComumForte { get; set; }
-
-        public bool DominioConteudoFraco { get; set; }
-        public bool DominioConteudoMedio { get; set; }
-        public bool DominioConteudoForte { get; set; }
-
-        public bool DedicacaoFraco { get; set; }
-        public bool DedicacaoMedio { get; set; }
-        public bool DedicacaoForte { get; set; }
-
-        public bool FaltasFraco { get; set; }
-        public bool FaltasMedio { get; set; }
-        public bool FaltasForte { get; set; }
-
-        public bool InteligenciaFraco { get; set; }
-        public bool InteligenciaMedio { get; set; }
-        public bool InteligenciaForte { get; set; }
-
-        public bool ComunicacaoFraco { get; set; }
-        public bool ComunicacaoMedio { get; set; }
-        public bool ComunicacaoForte { get; set; }
-
-        public LinguisticVariable risco { get; set; }
     }
 }
