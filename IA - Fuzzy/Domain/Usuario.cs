@@ -4,15 +4,15 @@
     {
         public int Codigo { get; set; }
         public string Nome { get; set; }
-        public int? ProporcaoRelacionamento { get; set; }
-        public int? ProporcaoTempoLivre { get; set; }
-        public int? ProporcaoNotas { get; set; }
-        public int? ProporcaoConfianca { get; set; }
-        public int? ProporcaoAtividadesComum { get; set; }
-        public int? ProporcaoDominioConteudo { get; set; }
-        public int? ProporcaoDedicacao { get; set; }
-        public int? ProporcaoFaltas { get; set; }
-        public int? ProporcaoInteligencia { get; set; }
-        public int? ProporcaoComunicacao { get; set; }
+        public double? ProporcaoRelacionamento { get; set; }
+        public double? ProporcaoTempoLivre { get; set; }
+        public double? ProporcaoNotas { get; set; }
+        public double? ProporcaoConfianca { get; set; }
+        public double? ProporcaoAtividadesComum { get; set; }
+        public double? ProporcaoDominioConteudo { get; set; }
+        public double? ProporcaoDedicacao { get; set; }
+        public double? ProporcaoFaltas { get; set; }
+        public double? ProporcaoInteligencia { get; set; }
+        public double? ProporcaoComunicacao { get; set; }
     }
 }

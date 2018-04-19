@@ -14,7 +14,7 @@ namespace IA___Fuzzy
         public static void Main(string[] args)
         {
             var pessoa = new Usuario();
-            var input = 0;
+            double input = 0.0;
 
             Console.Write("Por favor, informe o seu nome: ");
             pessoa.Nome = Console.ReadLine();
@@ -22,25 +22,25 @@ namespace IA___Fuzzy
             Console.WriteLine(pessoa.Nome + ", de 0 a 100, nos informe qual seria a sua melhor proporção em relação à:");
             Console.WriteLine("");
             Console.Write("Relacionamento: ");
-            pessoa.ProporcaoRelacionamento = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
+            pessoa.ProporcaoRelacionamento = double.TryParse(Console.ReadLine(), out input) ? input : (double?)null;
             Console.Write("Tempo Livre: ");
-            pessoa.ProporcaoTempoLivre = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
+            pessoa.ProporcaoTempoLivre = double.TryParse(Console.ReadLine(), out input) ? input : (double?)null;
             Console.Write("Notas: ");
-            pessoa.ProporcaoNotas = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
+            pessoa.ProporcaoNotas = double.TryParse(Console.ReadLine(), out input) ? input : (double?)null;
             Console.Write("Confiança: ");
-            pessoa.ProporcaoConfianca = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
+            pessoa.ProporcaoConfianca = double.TryParse(Console.ReadLine(), out input) ? input : (double?)null;
             Console.Write("Atividades em Comum: ");
-            pessoa.ProporcaoAtividadesComum = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
+            pessoa.ProporcaoAtividadesComum = double.TryParse(Console.ReadLine(), out input) ? input : (double?)null;
             Console.Write("Domínio do Conteúdo: ");
-            pessoa.ProporcaoDominioConteudo = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
+            pessoa.ProporcaoDominioConteudo = double.TryParse(Console.ReadLine(), out input) ? input : (double?)null;
             Console.Write("Dedicação: ");
-            pessoa.ProporcaoDedicacao = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
+            pessoa.ProporcaoDedicacao = double.TryParse(Console.ReadLine(), out input) ? input : (double?)null;
             Console.Write("Faltas: ");
-            pessoa.ProporcaoFaltas = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
+            pessoa.ProporcaoFaltas = double.TryParse(Console.ReadLine(), out input) ? input : (double?)null;
             Console.Write("Inteligência: ");
-            pessoa.ProporcaoInteligencia = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
+            pessoa.ProporcaoInteligencia = double.TryParse(Console.ReadLine(), out input) ? input : (double?)null;
             Console.Write("Comunicação: ");
-            pessoa.ProporcaoComunicacao = int.TryParse(Console.ReadLine(), out input) ? input : (int?)null;
+            pessoa.ProporcaoComunicacao = double.TryParse(Console.ReadLine(), out input) ? input : (double?)null;
 
             usuarioPessoal = pessoa;
 
@@ -59,16 +59,16 @@ namespace IA___Fuzzy
                 {
                     Codigo = int.Parse(divisor[0].Trim()),
                     Nome = divisor[1].Trim(),
-                    ProporcaoRelacionamento = int.Parse(divisor[2].Trim()),
-                    ProporcaoTempoLivre = int.Parse(divisor[3].Trim()),
-                    ProporcaoNotas = int.Parse(divisor[4].Trim()),
-                    ProporcaoConfianca = int.Parse(divisor[5].Trim()),
-                    ProporcaoAtividadesComum = int.Parse(divisor[6].Trim()),
-                    ProporcaoDominioConteudo = int.Parse(divisor[7].Trim()),
-                    ProporcaoDedicacao = int.Parse(divisor[8].Trim()),
-                    ProporcaoFaltas = int.Parse(divisor[9].Trim()),
-                    ProporcaoInteligencia = int.Parse(divisor[10].Trim()),
-                    ProporcaoComunicacao = int.Parse(divisor[11].Trim())
+                    ProporcaoRelacionamento = double.Parse(divisor[2].Trim()),
+                    ProporcaoTempoLivre = double.Parse(divisor[3].Trim()),
+                    ProporcaoNotas = double.Parse(divisor[4].Trim()),
+                    ProporcaoConfianca = double.Parse(divisor[5].Trim()),
+                    ProporcaoAtividadesComum = double.Parse(divisor[6].Trim()),
+                    ProporcaoDominioConteudo = double.Parse(divisor[7].Trim()),
+                    ProporcaoDedicacao = double.Parse(divisor[8].Trim()),
+                    ProporcaoFaltas = double.Parse(divisor[9].Trim()),
+                    ProporcaoInteligencia = double.Parse(divisor[10].Trim()),
+                    ProporcaoComunicacao = double.Parse(divisor[11].Trim())
                 };
                 usuarios.Add(usuario);
             }
@@ -129,7 +129,8 @@ namespace IA___Fuzzy
             Dictionary<Usuario, KeyValuePair<Usuario, double>> resultado = MontaMelhorDupla(pontuacoes);
 
             var maiorPontuacao = resultado.First().Value.Value;
-            var melhoresUsuarios = resultado.Where(w => w.Value.Value == maiorPontuacao).ToList();
+            var diferencaMenor = maiorPontuacao - 5.0;
+            var melhoresUsuarios = resultado.Where(w => w.Value.Value >= diferencaMenor).ToList();
 
             var nome1 = usuarioPessoal.Nome;
             var nome2 = resultado.First().Key.Nome;
@@ -173,10 +174,12 @@ namespace IA___Fuzzy
             RelacionamentoGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
             LinguisticVariable riscoQTD = new LinguisticVariable("riscoQTD");
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
-
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 10, 20, 30));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("MedioBaixo", 20, 30, 40, 50));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 40, 50, 60, 70));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("MedioAlto", 60, 70, 80, 90));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 80, 90, 100, 101));
+            
             FuzzyEngine fuzzyEngineRelacionamento = new FuzzyEngine();
             fuzzyEngineRelacionamento.LinguisticVariableCollection.Add(RelacionamentoPessoalQTD);
             fuzzyEngineRelacionamento.LinguisticVariableCollection.Add(RelacionamentoGeralQTD);
@@ -184,17 +187,17 @@ namespace IA___Fuzzy
             fuzzyEngineRelacionamento.Consequent = "riscoQTD";
 
             fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Baixo) AND (relacionamentoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
-            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Baixo) AND (relacionamentoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
-            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Baixo) AND (relacionamentoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
-            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Medio) AND (relacionamentoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Baixo) AND (relacionamentoGeralQTD IS Medio) THEN riscoQTD IS MedioBaixo"));
+            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Baixo) AND (relacionamentoGeralQTD IS Alto) THEN riscoQTD IS Medio"));
+            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Medio) AND (relacionamentoGeralQTD IS Baixo) THEN riscoQTD IS MedioBaixo"));
             fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Medio) AND (relacionamentoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
-            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Medio) AND (relacionamentoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
-            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Alto) AND (relacionamentoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
-            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Alto) AND (relacionamentoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Medio) AND (relacionamentoGeralQTD IS Alto) THEN riscoQTD IS MedioAlto"));
+            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Alto) AND (relacionamentoGeralQTD IS Baixo) THEN riscoQTD IS Medio"));
+            fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Alto) AND (relacionamentoGeralQTD IS Medio) THEN riscoQTD IS MedioAlto"));
             fuzzyEngineRelacionamento.FuzzyRuleCollection.Add(new FuzzyRule("IF (relacionamentoPessoalQTD IS Alto) AND (relacionamentoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
 
-            RelacionamentoPessoalQTD.InputValue = double.Parse(usuarioPessoal.ProporcaoRelacionamento.ToString());
-            RelacionamentoGeralQTD.InputValue = double.Parse(usuarioGeral.ProporcaoRelacionamento.ToString());
+            RelacionamentoPessoalQTD.InputValue = usuarioPessoal.ProporcaoRelacionamento.HasValue ? usuarioPessoal.ProporcaoRelacionamento.Value : 0;
+            RelacionamentoGeralQTD.InputValue = usuarioGeral.ProporcaoRelacionamento.HasValue ? usuarioGeral.ProporcaoRelacionamento.Value : 0;
 
             return fuzzyEngineRelacionamento.Defuzzify();
         }
@@ -212,9 +215,11 @@ namespace IA___Fuzzy
             TempoLivreGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
             LinguisticVariable riscoQTD = new LinguisticVariable("riscoQTD");
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 10, 20, 30));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("MedioBaixo", 20, 30, 40, 50));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 40, 50, 60, 70));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("MedioAlto", 60, 70, 80, 90));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 80, 90, 100, 101));
 
             FuzzyEngine fuzzyEngineTempoLivre = new FuzzyEngine();
             fuzzyEngineTempoLivre.LinguisticVariableCollection.Add(TempoLivrePessoalQTD);
@@ -223,17 +228,17 @@ namespace IA___Fuzzy
             fuzzyEngineTempoLivre.Consequent = "riscoQTD";
 
             fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Baixo) AND (tempoLivreGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
-            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Baixo) AND (tempoLivreGeralQTD IS Medio) THEN riscoQTD IS Medio"));
-            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Baixo) AND (tempoLivreGeralQTD IS Alto) THEN riscoQTD IS Alto"));
-            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Medio) AND (tempoLivreGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Baixo) AND (tempoLivreGeralQTD IS Medio) THEN riscoQTD IS MedioBaixo"));
+            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Baixo) AND (tempoLivreGeralQTD IS Alto) THEN riscoQTD IS Medio"));
+            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Medio) AND (tempoLivreGeralQTD IS Baixo) THEN riscoQTD IS MedioBaixo"));
             fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Medio) AND (tempoLivreGeralQTD IS Medio) THEN riscoQTD IS Medio"));
-            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Medio) AND (tempoLivreGeralQTD IS Alto) THEN riscoQTD IS Alto"));
-            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Alto) AND (tempoLivreGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
-            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Alto) AND (tempoLivreGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Medio) AND (tempoLivreGeralQTD IS Alto) THEN riscoQTD IS MedioAlto"));
+            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Alto) AND (tempoLivreGeralQTD IS Baixo) THEN riscoQTD IS Medio"));
+            fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Alto) AND (tempoLivreGeralQTD IS Medio) THEN riscoQTD IS MedioAlto"));
             fuzzyEngineTempoLivre.FuzzyRuleCollection.Add(new FuzzyRule("IF (tempoLivrePessoalQTD IS Alto) AND (tempoLivreGeralQTD IS Alto) THEN riscoQTD IS Alto"));
 
-            TempoLivrePessoalQTD.InputValue = double.Parse(usuarioPessoal.ProporcaoTempoLivre.ToString());
-            TempoLivreGeralQTD.InputValue = double.Parse(usuarioGeral.ProporcaoTempoLivre.ToString());
+            TempoLivrePessoalQTD.InputValue = usuarioPessoal.ProporcaoTempoLivre.HasValue ? usuarioPessoal.ProporcaoTempoLivre.Value : 0;
+            TempoLivreGeralQTD.InputValue = usuarioGeral.ProporcaoTempoLivre.HasValue ? usuarioGeral.ProporcaoTempoLivre.Value : 0;
 
             return fuzzyEngineTempoLivre.Defuzzify();
         }
@@ -251,9 +256,11 @@ namespace IA___Fuzzy
             NotasGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
             LinguisticVariable riscoQTD = new LinguisticVariable("riscoQTD");
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 10, 20, 30));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("MedioBaixo", 20, 30, 40, 50));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 40, 50, 60, 70));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("MedioAlto", 60, 70, 80, 90));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 80, 90, 100, 101));
 
             FuzzyEngine fuzzyEngineNotas = new FuzzyEngine();
             fuzzyEngineNotas.LinguisticVariableCollection.Add(NotasPessoalQTD);
@@ -262,17 +269,17 @@ namespace IA___Fuzzy
             fuzzyEngineNotas.Consequent = "riscoQTD";
 
             fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Baixo) AND (notasGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
-            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Baixo) AND (notasGeralQTD IS Medio) THEN riscoQTD IS Medio"));
-            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Baixo) AND (notasGeralQTD IS Alto) THEN riscoQTD IS Alto"));
-            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Medio) AND (notasGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Baixo) AND (notasGeralQTD IS Medio) THEN riscoQTD IS MedioBaixo"));
+            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Baixo) AND (notasGeralQTD IS Alto) THEN riscoQTD IS Medio"));
+            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Medio) AND (notasGeralQTD IS Baixo) THEN riscoQTD IS MedioBaixo"));
             fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Medio) AND (notasGeralQTD IS Medio) THEN riscoQTD IS Medio"));
-            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Medio) AND (notasGeralQTD IS Alto) THEN riscoQTD IS Alto"));
-            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Alto) AND (notasGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
-            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Alto) AND (notasGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Medio) AND (notasGeralQTD IS Alto) THEN riscoQTD IS MedioAlto"));
+            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Alto) AND (notasGeralQTD IS Baixo) THEN riscoQTD IS Medio"));
+            fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Alto) AND (notasGeralQTD IS Medio) THEN riscoQTD IS MedioAlto"));
             fuzzyEngineNotas.FuzzyRuleCollection.Add(new FuzzyRule("IF (notasPessoalQTD IS Alto) AND (notasGeralQTD IS Alto) THEN riscoQTD IS Alto"));
 
-            NotasPessoalQTD.InputValue = double.Parse(usuarioPessoal.ProporcaoNotas.ToString());
-            NotasGeralQTD.InputValue = double.Parse(usuarioGeral.ProporcaoNotas.ToString());
+            NotasPessoalQTD.InputValue = usuarioPessoal.ProporcaoNotas.HasValue ? usuarioPessoal.ProporcaoNotas.Value : 0;
+            NotasGeralQTD.InputValue = usuarioGeral.ProporcaoNotas.HasValue ? usuarioGeral.ProporcaoNotas.Value : 0;
 
             return fuzzyEngineNotas.Defuzzify();
         }
@@ -290,9 +297,11 @@ namespace IA___Fuzzy
             ConfiancaGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
             LinguisticVariable riscoQTD = new LinguisticVariable("riscoQTD");
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 10, 20, 30));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("MedioBaixo", 20, 30, 40, 50));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 40, 50, 60, 70));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("MedioAlto", 60, 70, 80, 90));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 80, 90, 100, 101));
 
             FuzzyEngine fuzzyEngineConfianca = new FuzzyEngine();
             fuzzyEngineConfianca.LinguisticVariableCollection.Add(ConfiancaPessoalQTD);
@@ -301,17 +310,17 @@ namespace IA___Fuzzy
             fuzzyEngineConfianca.Consequent = "riscoQTD";
 
             fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Baixo) AND (confiancaGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
-            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Baixo) AND (confiancaGeralQTD IS Medio) THEN riscoQTD IS Medio"));
-            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Baixo) AND (confiancaGeralQTD IS Alto) THEN riscoQTD IS Alto"));
-            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Medio) AND (confiancaGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Baixo) AND (confiancaGeralQTD IS Medio) THEN riscoQTD IS MedioBaixo"));
+            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Baixo) AND (confiancaGeralQTD IS Alto) THEN riscoQTD IS Medio"));
+            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Medio) AND (confiancaGeralQTD IS Baixo) THEN riscoQTD IS MedioBaixo"));
             fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Medio) AND (confiancaGeralQTD IS Medio) THEN riscoQTD IS Medio"));
-            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Medio) AND (confiancaGeralQTD IS Alto) THEN riscoQTD IS Alto"));
-            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Alto) AND (confiancaGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
-            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Alto) AND (confiancaGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Medio) AND (confiancaGeralQTD IS Alto) THEN riscoQTD IS MedioAlto"));
+            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Alto) AND (confiancaGeralQTD IS Baixo) THEN riscoQTD IS Medio"));
+            fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Alto) AND (confiancaGeralQTD IS Medio) THEN riscoQTD IS MedioAlto"));
             fuzzyEngineConfianca.FuzzyRuleCollection.Add(new FuzzyRule("IF (confiancaPessoalQTD IS Alto) AND (confiancaGeralQTD IS Alto) THEN riscoQTD IS Alto"));
 
-            ConfiancaPessoalQTD.InputValue = double.Parse(usuarioPessoal.ProporcaoConfianca.ToString());
-            ConfiancaGeralQTD.InputValue = double.Parse(usuarioGeral.ProporcaoConfianca.ToString());
+            ConfiancaPessoalQTD.InputValue = usuarioPessoal.ProporcaoConfianca.HasValue ? usuarioPessoal.ProporcaoConfianca.Value : 0;
+            ConfiancaGeralQTD.InputValue = usuarioGeral.ProporcaoConfianca.HasValue ? usuarioGeral.ProporcaoConfianca.Value : 0;
 
             return fuzzyEngineConfianca.Defuzzify();
         }
@@ -329,9 +338,11 @@ namespace IA___Fuzzy
             AtividadesComumGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
             LinguisticVariable riscoQTD = new LinguisticVariable("riscoQTD");
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 10, 20, 30));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("MedioBaixo", 20, 30, 40, 50));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 40, 50, 60, 70));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("MedioAlto", 60, 70, 80, 90));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 80, 90, 100, 101));
 
             FuzzyEngine fuzzyEngineAtividadesComum = new FuzzyEngine();
             fuzzyEngineAtividadesComum.LinguisticVariableCollection.Add(AtividadesComumPessoalQTD);
@@ -340,17 +351,17 @@ namespace IA___Fuzzy
             fuzzyEngineAtividadesComum.Consequent = "riscoQTD";
 
             fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Baixo) AND (atividadesComumGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
-            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Baixo) AND (atividadesComumGeralQTD IS Medio) THEN riscoQTD IS Medio"));
-            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Baixo) AND (atividadesComumGeralQTD IS Alto) THEN riscoQTD IS Alto"));
-            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Medio) AND (atividadesComumGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Baixo) AND (atividadesComumGeralQTD IS Medio) THEN riscoQTD IS MedioBaixo"));
+            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Baixo) AND (atividadesComumGeralQTD IS Alto) THEN riscoQTD IS Medio"));
+            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Medio) AND (atividadesComumGeralQTD IS Baixo) THEN riscoQTD IS MedioBaixo"));
             fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Medio) AND (atividadesComumGeralQTD IS Medio) THEN riscoQTD IS Medio"));
-            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Medio) AND (atividadesComumGeralQTD IS Alto) THEN riscoQTD IS Alto"));
-            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Alto) AND (atividadesComumGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
-            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Alto) AND (atividadesComumGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Medio) AND (atividadesComumGeralQTD IS Alto) THEN riscoQTD IS MedioAlto"));
+            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Alto) AND (atividadesComumGeralQTD IS Baixo) THEN riscoQTD IS Medio"));
+            fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Alto) AND (atividadesComumGeralQTD IS Medio) THEN riscoQTD IS MedioAlto"));
             fuzzyEngineAtividadesComum.FuzzyRuleCollection.Add(new FuzzyRule("IF (atividadesComumPessoalQTD IS Alto) AND (atividadesComumGeralQTD IS Alto) THEN riscoQTD IS Alto"));
 
-            AtividadesComumPessoalQTD.InputValue = double.Parse(usuarioPessoal.ProporcaoAtividadesComum.ToString());
-            AtividadesComumGeralQTD.InputValue = double.Parse(usuarioGeral.ProporcaoAtividadesComum.ToString());
+            AtividadesComumPessoalQTD.InputValue = usuarioPessoal.ProporcaoAtividadesComum.HasValue ? usuarioPessoal.ProporcaoAtividadesComum.Value : 0;
+            AtividadesComumGeralQTD.InputValue = usuarioGeral.ProporcaoAtividadesComum.HasValue ? usuarioGeral.ProporcaoAtividadesComum.Value : 0;
 
             return fuzzyEngineAtividadesComum.Defuzzify();
         }
@@ -368,9 +379,11 @@ namespace IA___Fuzzy
             DominioConteudoGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
             LinguisticVariable riscoQTD = new LinguisticVariable("riscoQTD");
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 10, 20, 30));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("MedioBaixo", 20, 30, 40, 50));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 40, 50, 60, 70));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("MedioAlto", 60, 70, 80, 90));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 80, 90, 100, 101));
 
             FuzzyEngine fuzzyEngineDominioConteudo = new FuzzyEngine();
             fuzzyEngineDominioConteudo.LinguisticVariableCollection.Add(DominioConteudoPessoalQTD);
@@ -379,17 +392,17 @@ namespace IA___Fuzzy
             fuzzyEngineDominioConteudo.Consequent = "riscoQTD";
 
             fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Baixo) AND (dominioConteudoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
-            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Baixo) AND (dominioConteudoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
-            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Baixo) AND (dominioConteudoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
-            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Medio) AND (dominioConteudoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Baixo) AND (dominioConteudoGeralQTD IS Medio) THEN riscoQTD IS MedioBaixo"));
+            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Baixo) AND (dominioConteudoGeralQTD IS Alto) THEN riscoQTD IS Medio"));
+            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Medio) AND (dominioConteudoGeralQTD IS Baixo) THEN riscoQTD IS MedioBaixo"));
             fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Medio) AND (dominioConteudoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
-            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Medio) AND (dominioConteudoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
-            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Alto) AND (dominioConteudoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
-            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Alto) AND (dominioConteudoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Medio) AND (dominioConteudoGeralQTD IS Alto) THEN riscoQTD IS MedioAlto"));
+            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Alto) AND (dominioConteudoGeralQTD IS Baixo) THEN riscoQTD IS Medio"));
+            fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Alto) AND (dominioConteudoGeralQTD IS Medio) THEN riscoQTD IS MedioAlto"));
             fuzzyEngineDominioConteudo.FuzzyRuleCollection.Add(new FuzzyRule("IF (dominioConteudoPessoalQTD IS Alto) AND (dominioConteudoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
 
-            DominioConteudoPessoalQTD.InputValue = double.Parse(usuarioPessoal.ProporcaoDominioConteudo.ToString());
-            DominioConteudoGeralQTD.InputValue = double.Parse(usuarioGeral.ProporcaoDominioConteudo.ToString());
+            DominioConteudoPessoalQTD.InputValue = usuarioPessoal.ProporcaoDominioConteudo.HasValue ? usuarioPessoal.ProporcaoDominioConteudo.Value : 0;
+            DominioConteudoGeralQTD.InputValue = usuarioGeral.ProporcaoDominioConteudo.HasValue ? usuarioGeral.ProporcaoDominioConteudo.Value : 0;
 
             return fuzzyEngineDominioConteudo.Defuzzify();
         }
@@ -407,9 +420,11 @@ namespace IA___Fuzzy
             DedicacaoGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
             LinguisticVariable riscoQTD = new LinguisticVariable("riscoQTD");
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 10, 20, 30));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("MedioBaixo", 20, 30, 40, 50));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 40, 50, 60, 70));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("MedioAlto", 60, 70, 80, 90));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 80, 90, 100, 101));
 
             FuzzyEngine fuzzyEngineDedicacao = new FuzzyEngine();
             fuzzyEngineDedicacao.LinguisticVariableCollection.Add(DedicacaoPessoalQTD);
@@ -418,17 +433,17 @@ namespace IA___Fuzzy
             fuzzyEngineDedicacao.Consequent = "riscoQTD";
 
             fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Baixo) AND (dedicacaoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
-            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Baixo) AND (dedicacaoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
-            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Baixo) AND (dedicacaoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
-            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Medio) AND (dedicacaoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Baixo) AND (dedicacaoGeralQTD IS Medio) THEN riscoQTD IS MedioBaixo"));
+            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Baixo) AND (dedicacaoGeralQTD IS Alto) THEN riscoQTD IS Medio"));
+            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Medio) AND (dedicacaoGeralQTD IS Baixo) THEN riscoQTD IS MedioBaixo"));
             fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Medio) AND (dedicacaoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
-            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Medio) AND (dedicacaoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
-            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Alto) AND (dedicacaoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
-            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Alto) AND (dedicacaoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Medio) AND (dedicacaoGeralQTD IS Alto) THEN riscoQTD IS MedioAlto"));
+            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Alto) AND (dedicacaoGeralQTD IS Baixo) THEN riscoQTD IS Medio"));
+            fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Alto) AND (dedicacaoGeralQTD IS Medio) THEN riscoQTD IS MedioAlto"));
             fuzzyEngineDedicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (dedicacaoPessoalQTD IS Alto) AND (dedicacaoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
 
-            DedicacaoPessoalQTD.InputValue = double.Parse(usuarioPessoal.ProporcaoDedicacao.ToString());
-            DedicacaoGeralQTD.InputValue = double.Parse(usuarioGeral.ProporcaoDedicacao.ToString());
+            DedicacaoPessoalQTD.InputValue = usuarioPessoal.ProporcaoDedicacao.HasValue ? usuarioPessoal.ProporcaoDedicacao.Value : 0;
+            DedicacaoGeralQTD.InputValue = usuarioGeral.ProporcaoDedicacao.HasValue ? usuarioGeral.ProporcaoDedicacao.Value : 0;
 
             return fuzzyEngineDedicacao.Defuzzify();
         }
@@ -446,9 +461,11 @@ namespace IA___Fuzzy
             FaltasGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
             LinguisticVariable riscoQTD = new LinguisticVariable("riscoQTD");
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 10, 20, 30));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("MedioBaixo", 20, 30, 40, 50));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 40, 50, 60, 70));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("MedioAlto", 60, 70, 80, 90));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 80, 90, 100, 101));
 
             FuzzyEngine fuzzyEngineFaltas = new FuzzyEngine();
             fuzzyEngineFaltas.LinguisticVariableCollection.Add(FaltasPessoalQTD);
@@ -457,17 +474,17 @@ namespace IA___Fuzzy
             fuzzyEngineFaltas.Consequent = "riscoQTD";
 
             fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Baixo) AND (faltasGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
-            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Baixo) AND (faltasGeralQTD IS Medio) THEN riscoQTD IS Medio"));
-            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Baixo) AND (faltasGeralQTD IS Alto) THEN riscoQTD IS Alto"));
-            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Medio) AND (faltasGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Baixo) AND (faltasGeralQTD IS Medio) THEN riscoQTD IS MedioBaixo"));
+            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Baixo) AND (faltasGeralQTD IS Alto) THEN riscoQTD IS Medio"));
+            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Medio) AND (faltasGeralQTD IS Baixo) THEN riscoQTD IS MedioBaixo"));
             fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Medio) AND (faltasGeralQTD IS Medio) THEN riscoQTD IS Medio"));
-            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Medio) AND (faltasGeralQTD IS Alto) THEN riscoQTD IS Alto"));
-            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Alto) AND (faltasGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
-            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Alto) AND (faltasGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Medio) AND (faltasGeralQTD IS Alto) THEN riscoQTD IS MedioAlto"));
+            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Alto) AND (faltasGeralQTD IS Baixo) THEN riscoQTD IS Medio"));
+            fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Alto) AND (faltasGeralQTD IS Medio) THEN riscoQTD IS MedioAlto"));
             fuzzyEngineFaltas.FuzzyRuleCollection.Add(new FuzzyRule("IF (faltasPessoalQTD IS Alto) AND (faltasGeralQTD IS Alto) THEN riscoQTD IS Alto"));
 
-            FaltasPessoalQTD.InputValue = double.Parse(usuarioPessoal.ProporcaoFaltas.ToString());
-            FaltasGeralQTD.InputValue = double.Parse(usuarioGeral.ProporcaoFaltas.ToString());
+            FaltasPessoalQTD.InputValue = usuarioPessoal.ProporcaoFaltas.HasValue ? usuarioPessoal.ProporcaoFaltas.Value : 0;
+            FaltasGeralQTD.InputValue = usuarioGeral.ProporcaoFaltas.HasValue ? usuarioGeral.ProporcaoFaltas.Value : 0;
 
             return fuzzyEngineFaltas.Defuzzify();
         }
@@ -485,9 +502,11 @@ namespace IA___Fuzzy
             InteligenciaGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
             LinguisticVariable riscoQTD = new LinguisticVariable("riscoQTD");
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 10, 20, 30));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("MedioBaixo", 20, 30, 40, 50));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 40, 50, 60, 70));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("MedioAlto", 60, 70, 80, 90));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 80, 90, 100, 101));
 
             FuzzyEngine fuzzyEngineInteligencia = new FuzzyEngine();
             fuzzyEngineInteligencia.LinguisticVariableCollection.Add(InteligenciaPessoalQTD);
@@ -496,17 +515,17 @@ namespace IA___Fuzzy
             fuzzyEngineInteligencia.Consequent = "riscoQTD";
 
             fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Baixo) AND (inteligenciaGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
-            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Baixo) AND (inteligenciaGeralQTD IS Medio) THEN riscoQTD IS Medio"));
-            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Baixo) AND (inteligenciaGeralQTD IS Alto) THEN riscoQTD IS Alto"));
-            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Medio) AND (inteligenciaGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Baixo) AND (inteligenciaGeralQTD IS Medio) THEN riscoQTD IS MedioBaixo"));
+            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Baixo) AND (inteligenciaGeralQTD IS Alto) THEN riscoQTD IS Medio"));
+            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Medio) AND (inteligenciaGeralQTD IS Baixo) THEN riscoQTD IS MedioBaixo"));
             fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Medio) AND (inteligenciaGeralQTD IS Medio) THEN riscoQTD IS Medio"));
-            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Medio) AND (inteligenciaGeralQTD IS Alto) THEN riscoQTD IS Alto"));
-            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Alto) AND (inteligenciaGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
-            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Alto) AND (inteligenciaGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Medio) AND (inteligenciaGeralQTD IS Alto) THEN riscoQTD IS MedioAlto"));
+            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Alto) AND (inteligenciaGeralQTD IS Baixo) THEN riscoQTD IS Medio"));
+            fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Alto) AND (inteligenciaGeralQTD IS Medio) THEN riscoQTD IS MedioAlto"));
             fuzzyEngineInteligencia.FuzzyRuleCollection.Add(new FuzzyRule("IF (inteligenciaPessoalQTD IS Alto) AND (inteligenciaGeralQTD IS Alto) THEN riscoQTD IS Alto"));
 
-            InteligenciaPessoalQTD.InputValue = double.Parse(usuarioPessoal.ProporcaoInteligencia.ToString());
-            InteligenciaGeralQTD.InputValue = double.Parse(usuarioGeral.ProporcaoInteligencia.ToString());
+            InteligenciaPessoalQTD.InputValue = usuarioPessoal.ProporcaoInteligencia.HasValue ? usuarioPessoal.ProporcaoInteligencia.Value : 0;
+            InteligenciaGeralQTD.InputValue = usuarioGeral.ProporcaoInteligencia.HasValue ? usuarioGeral.ProporcaoInteligencia.Value : 0;
 
             return fuzzyEngineInteligencia.Defuzzify();
         }
@@ -524,9 +543,11 @@ namespace IA___Fuzzy
             ComunicacaoGeralQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
 
             LinguisticVariable riscoQTD = new LinguisticVariable("riscoQTD");
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 20, 30, 40));
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 35, 50, 50, 65));
-            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 60, 80, 90, 101));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Baixo", 0, 10, 20, 30));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("MedioBaixo", 20, 30, 40, 50));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Medio", 40, 50, 60, 70));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("MedioAlto", 60, 70, 80, 90));
+            riscoQTD.MembershipFunctionCollection.Add(new MembershipFunction("Alto", 80, 90, 100, 101));
 
             FuzzyEngine fuzzyEngineComunicacao = new FuzzyEngine();
             fuzzyEngineComunicacao.LinguisticVariableCollection.Add(ComunicacaoPessoalQTD);
@@ -535,17 +556,17 @@ namespace IA___Fuzzy
             fuzzyEngineComunicacao.Consequent = "riscoQTD";
 
             fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Baixo) AND (comunicacaoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
-            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Baixo) AND (comunicacaoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
-            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Baixo) AND (comunicacaoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
-            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Medio) AND (comunicacaoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
+            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Baixo) AND (comunicacaoGeralQTD IS Medio) THEN riscoQTD IS MedioBaixo"));
+            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Baixo) AND (comunicacaoGeralQTD IS Alto) THEN riscoQTD IS Medio"));
+            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Medio) AND (comunicacaoGeralQTD IS Baixo) THEN riscoQTD IS MedioBaixo"));
             fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Medio) AND (comunicacaoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
-            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Medio) AND (comunicacaoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
-            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Alto) AND (comunicacaoGeralQTD IS Baixo) THEN riscoQTD IS Baixo"));
-            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Alto) AND (comunicacaoGeralQTD IS Medio) THEN riscoQTD IS Medio"));
+            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Medio) AND (comunicacaoGeralQTD IS Alto) THEN riscoQTD IS MedioAlto"));
+            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Alto) AND (comunicacaoGeralQTD IS Baixo) THEN riscoQTD IS Medio"));
+            fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Alto) AND (comunicacaoGeralQTD IS Medio) THEN riscoQTD IS MedioAlto"));
             fuzzyEngineComunicacao.FuzzyRuleCollection.Add(new FuzzyRule("IF (comunicacaoPessoalQTD IS Alto) AND (comunicacaoGeralQTD IS Alto) THEN riscoQTD IS Alto"));
 
-            ComunicacaoPessoalQTD.InputValue = double.Parse(usuarioPessoal.ProporcaoComunicacao.ToString());
-            ComunicacaoGeralQTD.InputValue = double.Parse(usuarioGeral.ProporcaoComunicacao.ToString());
+            ComunicacaoPessoalQTD.InputValue = usuarioPessoal.ProporcaoComunicacao.HasValue ? usuarioPessoal.ProporcaoComunicacao.Value : 0;
+            ComunicacaoGeralQTD.InputValue = usuarioGeral.ProporcaoComunicacao.HasValue ? usuarioGeral.ProporcaoComunicacao.Value : 0;
 
             return fuzzyEngineComunicacao.Defuzzify();
         }
