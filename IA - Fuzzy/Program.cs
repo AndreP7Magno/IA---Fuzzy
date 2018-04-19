@@ -129,7 +129,7 @@ namespace IA___Fuzzy
             Dictionary<Usuario, KeyValuePair<Usuario, double>> resultado = MontaMelhorDupla(pontuacoes);
 
             var maiorPontuacao = resultado.First().Value.Value;
-            var diferencaMenor = maiorPontuacao - 5.0;
+            var diferencaMenor = maiorPontuacao - 3.0;
             var melhoresUsuarios = resultado.Where(w => w.Value.Value >= diferencaMenor).ToList();
 
             var nome1 = usuarioPessoal.Nome;
